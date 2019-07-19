@@ -16,6 +16,3 @@ class Solution(object):
             self.generate(left-1, right, s + '(', res)
         if right > left:
             self.generate(left, right-1, s + ')', res)
-
-p = Solution()
-p.generateParenthesis(3)
