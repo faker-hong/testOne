@@ -12,7 +12,7 @@ def login_test():
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"}
 
     # 3需要登录的用户名和密码
-    data = {"email": "18757179539", "password": "hc666520"}
+    data = {"email": "18757179539", "password": "*******"}
 
     # 发送附带用户名和密码的请求，并获取登录后的Cookie值，保存在ssion里
     sesion.post("http://www.renren.com/PLogin.do", data=data)
