@@ -1,0 +1,232 @@
+1.create table new_student as select * from student			复制表
+2.create table new_student as select * from student	 where 1=0	复制表结构
+
+
+3.利用备份表new_student更新回学生“张三”的年龄和身份证
+update student s
+set (sex, age, idnumber) = (select sex, age, idnumber from new_student n where s.id = n.id)
+where exists (select 1 from new_student n where s.id = n.id and n.name='张三') 	select 1 返回的与结果集相同的条数，只有一列，列值为1
+
+
+4.利用merge into命令从学生表（student）更新学生备份表（new_student）的年龄，当备份表中找不到学生信息时插入新的学生信息
+merge into new_student a
+using student b
+on a.id = b.id
+when matched then
+   update set a.age = b.age
+when not matched then
+   insert (a.STUID,a.STUNAME,a.SEX,a.AGE,a.CLASSNO,a.STUADDRESS,a.GRADE,a.ENROLDATE,a.IDNUMBER)
+   values (b.STUID,b.STUNAME,b.SEX,b.AGE,b.CLASSNO,b.STUADDRESS,b.GRADE,b.ENROLDATE,b.IDNUMBER)
+
+
+5.行转列
+select * from (select c.stuname,
+	b.coursename,
+	t.score
+       from score t, course b, student c
+     where t.courseid = b.courseid 
+         and t.stuid = c.stuid)
+PIVOT
+(
+  SUM(score)
+  FOR coursename in ('英语(2018上学期)' as 英语,'数学(2018上学期)' as 数学,'语文(2018上学期)' as 语文 )
+)
+
+
+6.列转行
+select stuname, coursename, score
+from score s
+unpivot
+(score for coursename in ('英语(2018上学期)' as 英语,'数学(2018上学期)' as 数学,'语文(2018上学期)' as 语文 )
+
+
+PL/SQL:
+1.declare处为声明标量（可选）
+  begin开始为执行语句，end结束（必须）
+  exception开始为异常处理部分（可选）
+
+2.数据类型：
+----标量数据类型
+	--数值类型
+	--字符类型
+	--时间类型
+	--布尔类型
+----引用数据类型
+	--%type	     （相当于一个数据类型）
+	--%rowtype  (相当于java中的实例)
+declare
+ls_stuinfo stuinfo%rowtype;
+xsjbxx varchar2(50);
+begin
+  select t.* into ls_stuinfo
+    from stuinfo t
+   where t.stuid='SC201801006';
+   xsjbxx:='姓名:' ||ls_stuinfo.stuname || ' 学号:' ||ls_stuinfo.stuid || ' 年龄：' ||ls_stuinfo.age;
+  dbms_output.put_line(xsjbxx);
+exception
+  when no_data_found  then
+     dbms_output.put_line('该学生在学生信息表中找不到');
+end;
+
+
+3. for,if-else循环的使用
+declare
+ls_stuinfo stuinfo%rowtype;--学生信息表
+ls_number_boy number:=0;--男生计数器
+ls_number_girl number:=0;--女生计算器
+begin
+    --对学生信息表进行全表循环
+   for ls_stuinfo in (select * from stuinfo t) loop
+        if ls_stuinfo.sex = '1' then--性别编码为1的是男生 
+	ls_number_boy:=ls_number_boy+1;--计数器加1
+        else
+            --性别编码为2(不为1)的是女生  
+	ls_number_girl:=ls_number_girl+1;
+        end if;
+   end loop;
+   dbms_output.put_line('男生的数量是：'||ls_number_boy||',女生的数量是：'|| ls_number_girl);
+end;
+
+
+4.CASE WHEN
+declare
+ls_stuinfo stuinfo%rowtype;--学生信息表
+ls_number_26 number:=0;--26岁计数器
+ls_number_27 number:=0;--27岁计数器
+ls_number number:=0;--其它
+begin
+      --对学生信息表进行全表查询
+     for ls_stuinfo in (select * from stuinfo) loop
+          case ls_stuinfo.age
+             when 26 then
+                ls_number_26:=ls_number_26+1;
+             when 27 then
+                ls_number_27:=ls_number_27+1;
+             else
+                ls_number:=ls_number+1;
+           end case;
+    end loop;
+    dbms_output.put_line('26岁：'||ls_number_26||'人，27岁：'||ls_number_27||'人,其它岁数：'||ls_number||'人');
+end;
+
+
+5.PL/SQL动态执行DDL语句
+declare
+sql_yj varchar(500);--动态SQL执行的语句
+ls_stuid VARCHAR2(11);
+ls_stuname VARCHAR2(50);
+ls_sex CHAR(1);
+ls_age NUMBER(2);
+begin
+ --查询出学生信息表中学生"张三丰"的基本信息
+ select t.stuid,t.stuname,t.sex,t.age 
+ into ls_stuid,ls_stuname,ls_sex,ls_age 
+ from stuinfo t where t.stuid='SC201801006';
+ 
+ --利用动态语句执行插入操作，插入“张三丰”的信息
+ sql_yj:='insert into stuinfo_201812 values(:1,:2,:3,:4,null,null,null,null,null)';
+  execute immediate sql_yj using ls_stuid,ls_stuname,ls_sex,ls_age;
+end;
+
+
+6.Oracle储存过程
+create or replace procedure sp_score_pm(	--如果存储过程已经存在则覆盖替代原有的过程。 procedure 关键字是创建存储过程的命令。
+p_in_stuid in varchar2,--学号			--in表示入参，out表示出参， 后面跟着datatype
+p_in_courseid in  varchar2, --课程ID
+p_out_pm out number--排名
+)
+is					--is后面跟着的是过程当中使用到的声明变量。
+ls_score number:=0;
+ls_pm number:=0;
+begin
+  --获取该学生的成绩
+  select t.score into ls_score from score t
+   where t.stuid = p_in_stuid
+     and t.courseid = p_in_courseid;
+  --获取成绩比该学生高的人数
+  select count(1) into ls_pm from score t
+   where t.courseid = p_in_courseid
+   and  t.score>ls_score;
+   --得到该学生的成绩排名
+   p_out_pm:=ls_pm+1;
+exception
+  when no_data_found  then
+     dbms_output.put_line('该学生的课程：'||p_in_courseid|| '的成绩在成绩表中找不到');
+end;
+
+--------------sql窗口执行----------------
+declare
+ls_pm number;--排名
+begin
+  --SC201801001
+  sp_score_pm('SC201801001','R20180101',ls_pm);
+  dbms_output.put_line('学号：SC201801001,课程号：R20180101 的成绩排名是：'||ls_pm);
+  sp_score_pm('SC201801001','R20180102',ls_pm);
+  dbms_output.put_line('学号：SC201801001,课程号：R20180102 的成绩排名是：'||ls_pm);
+  --SC201801002
+  sp_score_pm('SC201801002','R20180101',ls_pm);
+  dbms_output.put_line('学号：SC201801002,课程号：R20180101 的成绩排名是：'||ls_pm);
+  sp_score_pm('SC201801002','R20180102',ls_pm);
+  dbms_output.put_line('学号：SC201801002,课程号：R20180102 的成绩排名是：'||ls_pm);
+   
+end;
+
+
+
+7.触发器
+1、or replace :存在同名的触发器就覆盖保存。
+
+2、trigger：创建触发器的关键词。
+
+3、before|after表示是选择的触发器是数据改变之前触发、数据改变之后触发。
+
+4、delete| insert | update:表示触发器触发的事件类型是删除、插入或更新。
+
+5、for each row: 表示行级触发器、不填就是语句级触发器
+
+6、follows :表示触发器的顺序是跟在哪个之后。
+
+7、when 表示触发器语句触发的条件
+
+--------------------------------------------行级触发器-------------------------------------------
+create or replace trigger tr_stuinfo_update
+  before update on stuinfo
+  for each row
+begin
+  --当学生班号发生变化时,
+  if :new.CLASSNO <> :old.CLASSNO then
+    --插入操作日志表
+    insert into oplog
+      (LOGID, --日志ID
+       TABLENAME, --表名
+       COLNAME, --列名
+       NEWDATA, --改变后数据
+       OLDDATA, --改变前数据
+       OPDATE, --操作时间
+       OPERATOR) --操作人
+    values
+      (pk_oplog_id.nextval,
+       'stuinfo',
+       'classno',
+       :new.classno,
+       :old.classno,
+       sysdate,
+       'jsq');
+  end if;
+end;
+
+
+------------------------------------------语句级触发器-----------------------------------
+create or replace trigger tr_stuinfo_sql
+     before update or delete or insert on stuinfo
+begin 
+     --每月15号禁止操作学生信息表
+     if to_char(sysdate, 'dd') = '15' then 
+           raise_application_error(-20001, '每月15号不能对学生信息表进行正删改操作！');
+     end if;
+end;
+
+
+
+
+
