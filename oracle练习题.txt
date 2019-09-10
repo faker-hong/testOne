@@ -1,0 +1,135 @@
+--课程表 course(ID,NAME)
+--学生表 student(ID,NAME)
+--成绩表 student_course(ID,STUDENT_ID,COURSE_ID,TEACHER_ID,SCORE)
+--老师表 teacher(ID,NAME)
+select * from student
+--1.物理成绩比英语成绩高的所有学生
+select c.name,a.course_id,a.score,b.course_id,b.score from
+(select student_id, course_id, score from student_course where course_id=30001)a,
+(select student_id, course_id, score from student_course where course_id=30005)b,
+student c
+where a.score>b.score and a.student_id=b.student_id and c.id = b.student_id
+
+--2.查询平均成绩大于60分的同学的学号和平均成绩
+select a.student_id, avg(a.score)
+from student_course a
+group by a.student_id
+having avg(a.score) > 60
+
+--3.查询所有同学的学号,姓名、选课数、总成绩
+select a.name,b.*
+from student a,
+(select count(course_id) 选课数,sum(score) 总分,student_id from student_course group by student_id)b
+where a.id=b.student_id
+
+
+--4.查询名字l开头的老师的个数
+select count(distinct(name)) l开头老师个数
+from teacher
+where name like 'l%'
+
+--5.查询没学过“liu”老师课的同学的学号、姓名
+select * from student where id not in (
+select distinct(student_id) from student_course where teacher_id = (
+select id from teacher where name='liu')
+)
+
+--6.学过30001和30002课程的同学的学号、姓名
+select a.student_id, b.name
+from student_course a,
+student b
+where a.course_id=30001 and a.student_id=b.id and exists(
+select * from student_course c where c.student_id = a.student_id and c.course_id=30002)
+group by a.student_id, b.name
+
+--7.学过30001和30002课程的同学的学号
+select a.student_id
+from (select student_id,course_id from student_course where course_id=30001)a inner join
+(select student_id,course_id from student_course where course_id=30002)b
+on a.student_id=b.student_id
+
+--8.查询学过“liu”老师所教的课的同学的学号、姓名
+select * from student where id in(
+select distinct(student_id) from student_course where teacher_id=(select id from teacher where name='liu'))
+
+--9.查询课程编号“30002”的成绩比课程编号“30001”课程低的所有同学的学号、姓名
+select a.*,b.score,c.score
+from student a,
+(select student_id,score from student_course where course_id=30002)b,
+(select student_id,score from student_course where course_id=30001)c
+where a.id=b.student_id and b.student_id=c.student_id and b.score<c.score
+
+--10.查询没有学全所有课的同学的学号、姓名
+select a.*
+from student a,
+(select count(course_id) c,student_id from student_course group by student_id)b
+where a.id=b.student_id and b.c <> (select count(*) from course)
+
+--11.查询所有课程成绩小于90分的同学的学号、姓名
+select * from student where id not in (
+select student_id from student_course  where score>90
+);
+
+--12.查询至少学过学号为“10001”同学所有一门课的其他同学学号和姓名
+select * from student where id in(
+select distinct(student_id) from student_course where student_id <> 10001 and course_id in(
+select course_id from student_course where student_id = 10001))
+
+--13.把“student_course”表中“liu”老师教的课的成绩都更改为此课程的平均成绩
+update student_course set score=(select avg(score) from student_course 
+where teacher_id=(select id from teacher where name='liu'))
+where teacher_id=(select id from teacher where name='liu')
+
+--14.查询和“10002”号的同学学习的课程完全相同的其他同学学号和姓名
+select a.* 
+from student a,student_course b
+where b.course_id in (select course_id from student_course where student_id = 10002)
+and a.id = b.student_id and b.student_id <> 10002
+group by a.id, a.name
+having count(*) = (select count(*) from student_course where student_id=10002)
+
+--15.删除学习“su”老师课的student_course表记录
+delete student_course where teacher_id=(select id from teacher where name='su')
+
+--16.查找没有上过编号“30003”课程的同学学号、"30003"号课的平均成绩
+select id,(select avg(score) from student_course where course_id=30003) from student where id not in(
+select student_id from student_course where course_id=30003)
+
+select id,(select avg(score) from student_course where course_id=30003) from student where not exists(
+select 1 from student_course a where student.id=a.student_id and course_id=30003)
+
+--17.按平均成绩从高到低显示所有学生的“物理”、“政治”、“英语”三门的课程成绩，
+-- 按如下形式显示： 学生ID,物理,政治,英语,有效课程数,有效平均分 
+select student_id 学生ID,
+(select score from student_course where t.student_id=student_id and course_id=30001) 物理,
+(select score from student_course where t.student_id=student_id and course_id=30002) 政治,
+(select score from student_course where t.student_id=student_id and course_id=30005) 政治,
+count(*) 有效课程数,
+avg(t.score) 有效平均分
+from student_course t
+group by student_id
+order by avg(t.score) desc
+
+--18.查询各科成绩最高和最低的分：以如下形式显示：课程ID，最高分，最低分 
+select course_id 课程ID, max(score) 最高分, min(score) 最低分
+from student_course
+group by course_id
+
+--19.按各科平均成绩从低到高和及格率
+select course_id 课程ID, avg(score) 平均成绩,100*sum(case when score>60 then 1 else 0 end)/count(*) 及格率
+from student_course
+group by course_id
+order by avg(score) desc
+
+--20.查询如下课程平均成绩和及格率的百分数(用"1行"显示):
+--  物理（30001），政治（30002），语文 （30003），高数（30004） 
+select
+sum(case when course_id=30001 then score else 0 end)/sum(case when course_id=30001 then 1 else 0 end) 物理平均成绩,
+100*sum(case when course_id=30001 and score>60 then 1 else 0 end)/sum(case when course_id=30001 then 1 else 0 end) 物理及格率,
+sum(case when course_id=30002 then score else 0 end)/sum(case when course_id=30002 then 1 else 0 end) 政治平均成绩,
+100*sum(case when course_id=30002 and score>60 then 1 else 0 end)/sum(case when course_id=30002 then 1 else 0 end) 政治及格率,
+sum(case when course_id=30003 then score else 0 end)/sum(case when course_id=30003 then 1 else 0 end) 语文平均成绩,
+100*sum(case when course_id=30003 and score>60 then 1 else 0 end)/sum(case when course_id=30003 then 1 else 0 end) 语文及格率,
+sum(case when course_id=30004 then score else 0 end)/sum(case when course_id=30004 then 1 else 0 end) 高数平均成绩,
+100*sum(case when course_id=30004 and score>60 then 1 else 0 end)/sum(case when course_id=30004 then 1 else 0 end) 高数及格率
+from student_course
