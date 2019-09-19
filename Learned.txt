@@ -1,0 +1,173 @@
+1.复习	nump
+		--np.array()  创建数组
+		--numpy.ones(shape, dtype = None, order = 'C')  创建shape形状的值为1的类型为dtype数组，order有'C','F',行数组或列数组
+		--a = np.arange(8)
+		--b = a.reshape(4,2)   修改a的形状，改为4行2列
+		--这里修改数组形状可以为机器学习那一块的处理数据服务
+
+	matplotlib（画图工具）
+		--参数（横坐标，纵坐标，线颜色，线宽，形状，标签，透明度）
+		--plt.plot(x, c, color='blue', linewidth=2.0, linestyle="-", label="COS", alpha=0.5)
+		--函数图，饼图，散点图，树状图等
+		
+
+	pandas（表格工具）
+		Series是列的对象，DataFrame相当于一个表格的对象
+		--dates = pd.date_range("20170329", periods=10)   # 以这个日期格式为第一条，总共10条
+    		--df = pd.DataFrame(np.random.randn(10, 5), index=dates, columns=list("ABCDE"))  # 10行五列，index索引，columns列名
+    		--s1 = pd.Series(list(range(10, 20)), index=pd.date_range("20170329", periods=10))
+	
+		--取数据
+		--可以直接拿列名取整列
+		--df[列名]
+		--df.head(3)  前三条数据
+		--df.tail(3)     后三条数据
+		--df.at[datas[0], "列名"]    特定位置数据
+		。。。。。。
+
+ 	scikit-learn
+		--鸢尾花为列子
+		--1.处理数据
+			iris = load_iris()
+    			train_data, test_data, train_target, test_target = train_test_split(iris.data, iris.target, test_size=0.2, random_state=1)
+		--2.建模，进行训练
+    			clf = tree.DecisionTreeClassifier(criterion="entropy")
+    			clf.fit(train_data, train_target)
+		--3.预测数据
+			pred =clf.predict(test_data)
+		--4.验证（使用正确率或者混淆矩阵）
+			--正确率  metrics.accuracy_score(y_pred=pred, y_true=test_target)
+			--混淆矩阵  metrics.confusion_matrix(y_true=test_target, y_pred=pred)
+			--混淆矩阵的对角线两边越接近0或者0越多说明正确率越高
+
+	keras 神经网络
+		--1.选择模型
+		    --函数式模型
+		    --序贯模型  Sequential
+		    --model = Sequential()
+
+		--2.构建网络层（一般分为三层，具体情况自己可以分多少层）
+		    --输入层    
+		 	model.add(Desen(500, input_shape=(784,)))    #第一个为输出，第二个为输入，都必须为一列的数据n为1列，这里图片为28*28像素的，28*28=784
+			model.add(Activation('tanh'))       # 激活函数
+			model.add(Dropout(0.5))         # 50%的dropout
+		    --隐藏层
+			model.add(Dense(500))   # 隐藏层节点500个
+			model.add(Activation('tanh'))
+			model.add(Dropout(0.5))
+		    --输出层（上一层的输入为下一层的输入）
+			model.add(Dense(10))    # 输出类别10个， 所以维度是10，这里根据输出的类别个数，来写输入的维度
+			model.add(Activation('softmax'))    # 激活函数为softmax
+
+		--3.编译
+			sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)     # 优化函数，设定学习率（lr）等参数
+			model.compile(loss='categorical_crossentropy', optimizer=sgd, class_mode='categorical')
+
+		--4.训练
+ 		   .fit的一些参数
+		    batch_size:对总的样本数进行分组，每组包含的样本数量
+		    epochs:训练次数
+ 		   shuffle:是否把随机数打乱后再进行训练
+		    validation_split:拿出百分之多少用来做交叉验证
+		    verbose:屏显模式 0：不输出 1：输出进度 2：输出每次的训练结果
+
+		model.fit(X_train, Y_train, batch_size=200, epochs=50, shuffle=True, verbose=0, validation_split=0.3)
+		model.evaluate(X_test, Y_test, batch_size=200, verbose=0)
+
+		--5.输出
+		result = model.predict(X_test, batch_size=200, verbose=0)
+
+	collections{
+		defaultdic
+		        --参数规定数据类型，初始化为类型的默认值，也可以为类或方法
+		        --default_dict = defaultdict(int)
+
+		deque
+		        --用法与list相同，但线程是安全的，list有的方法都能用
+		        --但sort()方法我试了不能用，不返回新排序对象，直接在原list上改
+		        --sorted(iterable，key， reverse)
+		        --sorted(f, key = lambda x:x['age'], reverse=True)
+
+		namedtuple
+		        --与元组用法相同，比较有用的两个方法
+		        --user = User._make(user_tuple)   不需要*，函数内会处理，但必须长度相等,传进来可迭代的对象就可以
+    		        --user_info_dict = user._asdict()  user中的属性转换为dict
+
+		counter
+		         --用于计数
+		         --count_one = Counter("asjdasbdjkas") 
+		         --most_common(int)  取出现次数最多的几个
+		         --count_one.most_common(2)
+
+		chainmap
+		         --如需要遍历多个dict，chainmap可用于合并，但key相同的，后面出现的会变忽略
+		         --new_dict = ChainMap(user_dict1, user_dict2)
+		         --也可以用maps方法拿到合并时的第N个dict
+		         --new_dict.maps[0]
+
+		ordereddict
+		         --和dict用法类似，有序，为存储的顺序
+		         --user_dict.popitem()  # 删除末尾
+		         --user_dict.pop("a")  # 必须要传入一个key的值
+		         --user_dict.move_to_end("b")  # 也需要传入一个key
+}
+
+
+dynamic-programming:     https://leetcode-cn.com/problemset/all/?topicSlugs=dynamic-programming
+gerrty:  	https://leetcode-cn.com/problemset/all/?topicSlugs=dynamic-programming%2Cgreedy
+
+5.学习关于Internet的知识（https等）
+
+6.学习爬虫
+--1.通过response = requests.get(url)得到请求的信息
+--2.soup = BeautifulSoup(response.content, 'html.parser')  用BS通过html.parser解析
+
+problems：
+	--遇到的反爬虫问题
+		--在请求同中加入cookie，User-Agent， Referer模仿人的操作。
+		--模拟登陆，创建session对象，然后把数据带过去。
+		     -- sesion = requests.session()
+		     -- data = {"email": "*******", "password": “******”}
+		     -- sesion.post("http://www.renren.com/PLogin.do", data=data)
+
+		--如何获取到的网页源码中没有想要的数据，就去js动态加载的那个url试着分析url参数
+		--看访问的网页是取那个url中拿的数据，在Request URL中
+		--从参数中发现规律然后取出想要的数据
+
+	--获取对应数据
+	    --re模块中正则re.findall(r'<title>(.*?)</title>', result)
+	    --BeautifulSoup对象也有find_all()和select()
+		列子：
+		--urls = soup.select(".book-mulu > ul > li > a")
+		--text = soup.find_all('p')
+		--如何要取某个类中的数据，因为class为关键字，所以这里为class_
+		--text = soup.find_all(class_='p')
+
+
+7.sql优化 --表连接hash(等值判断速度快，不能用于模糊，大于小于)，NL(常用连接方式，适用各种条件)，merge sort(在需要排序的情况下速度较快，不常用)
+	--oracle会根据代价自己选择表连接方式，也可以自己控制选择哪种表连接方式
+常用常看sql性能，explain plan for（对于sql的预估并不是百分百真实的，也有可能不这么执行）     set autotrace on
+
+--判断sql性能的有效指标，逻辑读
+
+oracle体系结构
+
+--SGA
+1）Database buffer cache：缓存了从磁盘上检索的数据块。
+2）Redo log buffer：缓存了写到磁盘之前的重做信息。
+3）Shared pool：缓存了各用户间可共享的各种结构。
+4）Large pool：一个可选的区域，用来缓存大的I/O请求，以支持并行查询、共享服务器模式以及某些备份操作。
+5）Java pool：保存java虚拟机中特定会话的数据与java代码。
+6）Streams pool：由Oracle streams使用。
+7）Keep buffer cache：保存buffer cache中存储的数据，使其尽时间可能长。
+8）Recycle buffer cache：保存buffer cache中即将过期的数据。
+9）nK block size buffer：为与数据库默认数据块大小不同的数据块提供缓存。用来支持表空间传输。
+
+database buffer cache, shared pool, large pool, streams pool与Java pool根据当前数据库状态，自动调整；
+keep buffer cache,recycle buffer cache,nK block size buffer可以在不关闭实例情况下，动态修改。
+
+--tips
+	--如果in后面的值比较少可以使用，多的话还是exists效率比较高
+	--exists返回的是布尔值，所以select 1就行，不需要查出具体的数据细节
+	--不要在字段上做运算，如果非要只有的话可以建函数索引
+	--减少对null进行判断搜索
