@@ -171,3 +171,56 @@ keep buffer cache,recycle buffer cache,nK block size buffer可以在不关闭实
 	--exists返回的是布尔值，所以select 1就行，不需要查出具体的数据细节
 	--不要在字段上做运算，如果非要只有的话可以建函数索引
 	--减少对null进行判断搜索
+
+8.SQLAlchemy
+	--1.创建引擎连接数据库
+		-----------echo=True为显示执行细节
+		--Oracle:
+		-----------解决sql中的中文乱码问题
+			import os
+			os.environ["NLS_LANG"] = "GERMAN_GERMANY.UTF8"
+			engine = create_engine('oracle+cx_oracle://TEST:123@orcl', echo=True)
+		--MySQL: 	
+		-----------解决sql中的中文乱码问题
+			MySQL只需要在连接url后面加上?charset=utf8即可
+			engine = create_engine("mysql+pymysql://root:123456@localhost:3306/xhx?charset=utf8", echo=True)	
+
+	--2.创建对象的基类
+		Base = declarative_base()
+		继承这个类，每个类需要写一个tablename与数据库中的表名对应，字段与属性对应
+		这里有个创建好类一键在数据库中生成表的方法
+		-- 创建表
+		Base.metadata.create_all(engine)
+
+	--3.自定义orm框架api接口
+		----创建与数据库的会话session class， 这里返回给session的是个class，不是实列
+       		---- session_factory = sessionmaker(bind=engine)
+		----scoped_session类似与单例，不能同时对一个session进行操作
+        		----Session = scoped_session(session_factory)   
+
+	--4.测试
+		--先初始化api接口
+		--传入相对应的参数，数据
+		--测试结果
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
