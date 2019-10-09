@@ -1,0 +1,4 @@
+select d.name Department, e.name Employee, e.Salary Salary
+from(select departmentid, max(salary) salary from employee group by departmentid)s
+join employee e on e.departmentid = s.departmentid and e.salary = s.salary
+join department d on d.id = e.departmentid

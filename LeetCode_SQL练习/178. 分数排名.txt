@@ -1,0 +1,3 @@
+select s1.score, s2.rank 
+from Scores s1 left join(select score, rownum rank from (select distinct(score) from Scores order by score desc))s2
+on s1.score =s2.score

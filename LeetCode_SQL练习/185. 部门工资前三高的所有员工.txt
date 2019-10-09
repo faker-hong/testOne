@@ -1,0 +1,14 @@
+select  Department,Employee,Salary
+from 
+(
+    select
+    employee.name as Employee,
+    department.name as Department,
+    employee.salary as Salary,
+    dense_rank() over (partition by department.id order by employee.salary desc) as rn
+    from
+    employee inner join department
+    on employee.departmentid=department.id
+)e
+where e.rn<4
+order by Department,e.rn
