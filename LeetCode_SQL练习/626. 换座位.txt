@@ -1,0 +1,7 @@
+SELECT (CASE
+            WHEN MOD(ID, 2) = 1 AND ID = (SELECT COUNT(*) FROM seat) THEN ID
+            WHEN MOD(ID, 2) = 1 THEN ID + 1
+            ELSE ID-1
+        END) ID, student
+FROM seat
+ORDER BY ID
