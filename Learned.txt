@@ -41,6 +41,18 @@
 			--混淆矩阵的对角线两边越接近0或者0越多说明正确率越高
 
 	keras 神经网络
+		--这里增加两个会用到的两个方法，
+			--1. cv2的resize方法，用于改变图片的大小
+			--cv2.resize(图片对象,(w,h))	这里的图片对象可以是img = cv2.imread(url)
+			--resize的操作是先x轴后y轴，所以这里把宽写在前面，比如图片大小为50*25，这里就应该是（25，50）
+
+			--2.  numpy的reshape方法，可用于改变图片的形状
+			--因为深度学习需要n行1列的数据，所以有些数据需要进行改变形状
+			--参数说明，list是一个集合，n为list中的个数，每一个元素改变为width*height行，1列的数据
+			--list.reshape(n, width, height, 1)
+			--img = [1,2,3,4]	
+			--img.reshape(2, -1)   -1会根据之前的维度计算出另一个维度
+
 		--1.选择模型
 		    --函数式模型
 		    --序贯模型  Sequential
@@ -203,18 +215,59 @@ keep buffer cache,recycle buffer cache,nK block size buffer可以在不关闭实
 		--传入相对应的参数，数据
 		--测试结果
 
+9.ETL（Extract-Transform-Load）
+	概念：
+	--ETL是将业务系统的数据经过抽取、清洗转换之后加载到数据仓库的过程，目的是将企业中的分散、零乱、标准不统一的数据整合到一起，为企业的决策提供分析依据。
+	
+	ETL的设计分三部分：
+		----数据抽取、
+		----数据的清洗转换、
+		----数据的加载。
+	
 
 
+10.多线程编程
+	--参数可选
+	--join(time)    调用该方法为加入该线程，等待该线程执行完后再执行之后的任务
+		--让当前线程所处的线程等待该线程执行完毕（所处的线程一般为主线程）
+	--join()方法是释放锁的，sleep()方法是不释放锁的
+
+	--threading库中的Thread类
+	--这里target后面的方法如果带()就不需要start就直接运行，不带()需要start()后才能启动线程
+	--args是个元组，就算只有一个也需要在后面加逗号，
+	--thread-1 = threading.Thread(target=fun, args=(fun,))
+
+	--threading库中的Semaphore类
+	--threading.Semaphore(1)    初始化的值为1，表示最大连接数为1
+	--使用acquire方法会使值-1，release方法使值+1
+	--值小于0将引起堵塞，值为0为等待状态
+
+	--threading库中的Timer类
+	--timer = threading.Time(2, function_name)
+	--timer.start()        
+	--timer.cancel()      结束timer
+
+	--threading库中的Barrier类
+	--bar = threading.Barrier(n, function_name)  设置一个线程数量阻碍，当等待的线程数量达到n时，执行一次function_name方法然后唤醒所有等待线程
+	--在执行的线程中，对bar这个对象调用wait()方法进去等待状态的线程，在bar线程数量到n时会唤醒这个线程。
+
+	--threading库中的Condition类
+	--条件对象，这里配合，notify和wait方法使用
+	--con = threading.Condition()
+	--con.notify()    唤醒等待这个对象的线程，进入就绪状态
+	--con.wait()    然后调用wait方法释放当前的锁，让出cpu进入等待状态
 
 
+	--使用场景
+		--网络请求
 
+		--图片加载
 
+		--文件处理
 
+		--数据存储
 
-
-
-
-
+		--多任务	
 
 
 
