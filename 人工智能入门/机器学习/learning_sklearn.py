@@ -18,7 +18,7 @@ def split_iris():
 
 
 # 字典特征提取
-def DictVectorizer():
+def DictVectorizer_test():
     data = [{'city': '杭州', 'temperature': 100},
             {'city': '上海', 'temperature': 200},
             {'city': '南京', 'temperature': 300}]
@@ -127,8 +127,8 @@ def PCA_demo():
 
 
 if __name__ == '__main__':
-    split_iris()
-    # DictVectorizer()
+    # split_iris()
+    DictVectorizer_test()
     # CountVectorizer_demo()
     # cut_CN_words("我爱北京天安门")
     # CountVectorizer_Chinese_demo()
