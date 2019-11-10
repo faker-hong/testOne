@@ -1,0 +1,31 @@
+import requests
+1.获取响应
+	--response = requests.get(url)
+	--response = requests.post(url, data=data, headers=headers)
+		--response中的方法
+			response.text     该方法往往会出现乱码，它是指猜测可能编码的方式来解码，可以使用response.encoding='utf-8',填写正确的编码方式
+		--response.content.decode()	把响应的二进制字节流转化为str类型，不写参数默认为utf-8
+2.获取网页源码三种方式
+	--response.text
+	--response.content.decode()
+	--response.content.decode('gbk')
+3.超时参数的设置
+	response = requests.get(url, timeout=3)	防止响应过长影响后面程序的进行，单位为秒，响应超过3秒就会报错
+4.数据提取方法
+	--json
+		json.load(json字符串)    把json字符串转化为python类型
+		
+		# ensure_ascii为False，不用ascill的编码格式，indent开头空两格
+		json.dumps(python类型, ensure_ascii=False, indent=2)    把python类型转换为json类型
+	--xpath
+		从html中提取数据的语言
+
+5.流程
+	1.--url
+	        --知道url地址的规律和总页码数：构造url地址的列表
+	2.--发送请求，获取响应
+	        --requests
+	3.--提取数据
+	        --返回json字符串：json模块
+	        --返回的是html字符串，BS4的方法根据html元素获取
+	4.--保存
