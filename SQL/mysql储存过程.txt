@@ -1,0 +1,67 @@
+	case用法储存过程
+delimiter //
+create procedure test_case(int book_id int)
+begin
+declare var int;
+set var=book_id+1;
+case var
+when 9 then
+insert into facttable values(1, 1, 1, 1);
+when 13 then 
+update facttable set sale=99 where book_id=var;
+end case;
+end;
+//
+delimiter ;
+
+
+
+	while用法储存过程
+delimiter //
+create procedure test_while()
+begin 
+declare var int;
+set var=0;
+while var<5 do
+insert into facttable values(var, var, var, var);
+set var=var+1;
+end while;
+end;
+//
+delimiter ;
+
+
+
+	repeat用法储存过程
+delimiter //
+create procedure test_repeat()
+begin
+declare var int;
+set var=0;
+repeat
+insert into facttable values(var, var, var, var);
+set var=var+1;
+until var>=5
+end repeat;
+end;
+//
+delimiter ;
+
+
+
+	loop用法储存过程
+delimiter //
+create procedure test_loop()
+begin
+declare var int;
+set var=0;
+LOOP_LABLE:loop
+insert into facttable values(var, var, var, var);
+set var=var+1;
+if var>=5 then
+leave LOOP_LABLE;
+end if;
+end loop;
+end;
+//
+delimiter ;
