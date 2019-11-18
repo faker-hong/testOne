@@ -1,0 +1,21 @@
+DELIMITER //
+
+USE `etl_test`//
+
+DROP PROCEDURE IF EXISTS `node_hide`//
+
+CREATE PROCEDURE `node_hide`(
+	`node_id` INT UNSIGNED,
+	`deleted` INT UNSIGNED
+) COMMENT 'DELETE node'
+BEGIN
+  UPDATE
+    `prefix_nodes` AS node
+    JOIN `prefix_nodes_paths` AS path 
+      ON node.`id` = path.`descendant_id`
+    JOIN `prefix_nodex_paths` AS d 
+      ON path.`descendant_id` = d.`descendant_id`  SET  node.`is_delete` = `deleted`
+  WHERE path.`ancestor_id`= `node_id`;
+END//
+
+DELIMITER ;

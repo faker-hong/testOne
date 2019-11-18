@@ -1,0 +1,32 @@
+DELIMITER //
+
+USE `etl_test`//
+
+DROP PROCEDURE IF EXISTS `get_tree`//
+
+CREATE PROCEDURE `get_tree`(
+	`node_id` INT UNSIGNED
+)COMMENT 'query all decendants node by node id, return as a result set'
+BEGIN
+  SELECT
+    node.`id`,
+    node.`is_delete`,
+    node.`parent_id`,
+    CONCAT(
+	REPEAT('-', path.length),
+	node.`name`
+    ) AS name,
+    path.`path_length`,
+    GROUP_CONCAT(
+	crumbs.`ancestor_id` SEPARATOR ','		
+    )AS breakcrumbs
+  FROM
+    `prefix_nodes` AS node,
+    JOIN `prefix_nodes_paths` AS path ON node.`id` = path.`descendant_id`
+    JOIN `prefix_nodes_paths` AS crumbs ON path.`descendant_id` = crumbs.`descendant_id`
+  WHERE path.`ancestor_id` = `node_id` AND node.`is_delete` = 0
+  GROUP BY node.`id`
+  ORDER BY breakcrumbs
+END//
+
+DELIMITER ;

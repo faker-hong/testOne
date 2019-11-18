@@ -1,0 +1,27 @@
+DROP TABLE IF EXISTS `prefix_nodes`;
+DROP TABLE IF EXISTS `prefix_nodes_paths`;
+
+CREATE TABLE `prefix_nodes`(
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(10) DEFAULT NULL,
+  `order` int(10) DEFAULT NULL,
+  `name` varchar(128) NOT NULL,
+  `is_delete` tinyint(1) DEFAULT '0',
+  `user_id` int(10) NOT NULL,
+  `user_type` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name`(`name`),
+  KEY `parent_id` (`parent_id`),
+  CONSTRAINT `fk_parent_id` FORIGN KEY (`parent_id`) REFERENCE `prefix_nodes`(`id`) ON DELETE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `prefix_nodes_paths`(
+  `ancestor_id` int(10) NOT NULL,
+  `descendant_id` int(10) NOT NULL,
+  `path_length` int(10) NOT NULL,
+  PRIMARY KEY(`ancestor_id`, `descendant_id`),
+  KEY `descendant_id` (`descendant_id`),
+CONSTRAINT `fk_prefix_id` FORIGN KEY (`ancestor_id`) REFERENCE `prefix_nodes_path`(`id`) ON DELETE CASCADE,
+CONSTRAINT `fk_prefix_parent_id` FORIGN KEY (`descendant_id`) REFERENCE `prefix_nodes_path`(`id`) ON DELETE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

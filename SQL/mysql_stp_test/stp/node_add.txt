@@ -1,0 +1,31 @@
+DELIMITER //
+ 
+USE `etl_test`//
+
+DROP PROCEDURE IF EXISTS `node_add`//
+
+CREATE PROCEDURE `node_add`(
+	`node_new_id` INT UNSIGNED,
+	`node_new_parent_id` INT UNSIGNED
+)COMMENT `add new paths prefix_nodes_paths table`
+BEGIN
+  INSERT INTO `prefix_nodes_paths`(
+    `ancestor_id`,
+    `descendant_id`,
+    `path_length`
+)
+  SELECT 
+    `ancestor_id`,
+    `node_new_id`,
+    `path_length` +1
+  FROM 
+    `prefix_nodes_paths`
+  WHERE `descendant_id` = `node_new_parent_id`
+  UNINO
+  ALL
+  SELECT
+    `node_new_id`,
+    `node_new_id`,
+    0;
+END//
+DELIMITER ; 
