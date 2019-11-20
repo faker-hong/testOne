@@ -1,0 +1,41 @@
+DELIMITER //
+USE etl_test//
+
+CREATE PROCEDURE putting_it_all_together(
+	in_department_id INT
+)
+BEGIN
+  DECLARE l_employee_id INT;
+  DECLARE l_salary NUMERIC(8,2);
+  DECLARE l_department_id INT;
+  DECLARE l_new_salary NUMERIC(8,2);
+  DECLARE done INT DEFAULT 0;
+ 
+  DECLARE cur1 CURSOR FOR
+      SELECT employee_id, salary, department_id
+      FROM employees
+      WHERE department_id=in_department_id;
+  DECLARE CONTINUE HANDLER FOR  NOT FOUND SET done=1;
+
+  CREATE TEMPORARY TABLE IF NOT EXISTS `emp_raises`
+      (employee_id INT, department_id INT, new_salary NUMERIC(8,2));
+
+  OPEN cur1;
+  emp_loop:LOOP
+      FETCH cur1 into l_employee_id, l_salary, l_department_id;
+      IF done=1 then
+        leave emp_loop;
+      END IF;
+      CALL new_salary(l_employee_id, l_new_salary);
+      IF (l_new_salary <> l_salary) then
+          UPDATE employees
+              SET salary=l_new_salary
+          WHERE employee_id=l_employee_id;
+          INSERT INTO emp_raises(employee_id, department_id, new_salary)
+              VALUES(l_employee_id, l_department_id, l_new_salary);
+      END IF;
+      END LOOP emp_loop;
+      CLOSE cur1;
+      SELECT employee_id, department_id, new_salary FROM emo_raises
+          ORDER BY employees=_id;
+END;//

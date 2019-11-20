@@ -88,10 +88,35 @@ end;//
 delimiter ;
 --------------------------------------------------------------------------------------------------
 
+--LOOP的使用
+
+delimiter //
+use etl_test//
+
+create procedure loop_cursor(
+)
+begin
+  declare location_id INT;
+  declare time_id INT;
+  declare sales INT;
+  declare loop_times INT default 0;
+ declare done INT default 0;
+  declare cur CURSOR for select locationid, timeid, sale from facttable;
+  declare continue handler for not found set done=1;
+  open cur;
+  cur_loop:LOOP
+    fetch cur into location_id, time_id, sales;
+    set loop_times=loop_times+1;
+    select location_id, time_id, sales;
+    if loop_times >2 then
+      leave cur_loop;
+    end if;
+    end LOOP cur_loop;
+    close cur;
+end;//
 
 
-
-
+-----------------------------------------------------------------------------------------
 
 
 

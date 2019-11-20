@@ -1,0 +1,22 @@
+触发器四要素：
+    --监视地点（table）
+    --监视事件（insert，update，delete）
+    --触发事件（insert，update，delete）
+    --触发时间（after/before）
+触发器只能建立在永久表上，不能建立在临时表上
+
+e.g.
+--成绩表与学生表
+score（number,		stu（username,
+	stu_id,		         password,
+	stu_name,		         stuid,
+	math,		         birthday)
+	english,
+	chinese ）
+------需求：添加学生时，把学生姓名与学生id存到成绩表中，语数外成绩等老师录入即可
+CREATE TRIGGER insert_stu
+AFTER INSERT ON stu EACH ROW
+BEGIN
+	INSERT INTO score(stu_id, stu_name
+		VALUES(NEW.stuid, NEW.username);
+END;
