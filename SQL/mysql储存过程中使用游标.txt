@@ -1,0 +1,109 @@
+1.声明游标
+declare cursor cursor_name for sql_statement;
+2.定义游标结束
+declare continue handler for not found set done=1;  --判断退出条件
+3.打开游标
+open cursor_name;
+4.fetch使用游标
+fetch cursor_name into name,pwd; --将一条条的数据拿到存入result中
+select concat(',', name, pwd) into result;
+5.游标使用完，关闭游标
+close cursor_name;
+
+
+
+-----------------------------------------------------------------------------
+DELIMITER //
+
+create procedure `test`(
+	in param int(10),
+	out result varchar(100)
+)
+begin
+  declare done int;
+  declare name varchar(10);
+  declare pwd varchar(20);
+  declare cur CURSOR for select name_user, password_user from user;
+  declare continue handler FOR SQLSTATE '02000' set done = 1;
+  if param then
+    select concat_ws(',', name_user, password_user) into result from user where id=param;
+  else
+    open cur;
+    repeat
+      fetch cur into name, pwd;
+      select concat(',', name_user, password_user) into result;
+    until done end repeat;
+    close cur;
+  end if;
+end;
+//
+
+
+---------------------------------------------------------------------------------------
+
+
+
+DELIMITER //
+
+USE etl_test //
+
+create procedure `test_cursor`(
+	in book_id INT,
+	out result varchar(100)
+)
+begin
+    declare done INT DEFAULT 0;
+    declare location_id INT;
+    declare time_id INT;
+    declare sales INT;
+    declare cur CURSOR FOR select locationid, timeid, sale from facttable;
+    declare continue handler FOR not found set done=1;
+
+    if book_id then
+        insert into facttable_insert(
+	    locationid,
+	    timeid,
+	    sale,
+	    insert_timestamp
+)  (select locationid, timeid, sale, current_timestamp() from facttable where bookid=book_id);
+    else
+      open cur;
+      repeat
+        fetch cur into location_id, time_id, sales;
+        insert into insert_test(
+	locationid,
+	timeid,
+	sale,
+	insert_time	
+)  values(	location_id,
+	time_id,
+	sales,
+	current_timestamp()
+);
+      until done end repeat;
+      close cur;
+    end if;
+end;//
+
+delimiter ;
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
