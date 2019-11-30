@@ -1,0 +1,52 @@
+--取得每个部门中的最高薪水的人员名称
+# 先找个每个部门的最高薪资，然后再与该表连接，取出薪资相同的人员信息
+SELECT deptno, MAX(sal) maxsal
+from emp
+GROUP BY deptno
+
+SELECT e.ename
+from emp e
+	JOIN (SELECT deptno, MAX(sal) maxsal from emp GROUP BY deptno) s on s.deptno=e.deptno
+WHERE e.sal=s.maxsal
+
+
+--哪些人的薪水在部门的平均薪水之上
+# 先求出部门平均薪水的表，然后再与之关联找到最终信息
+SELECT deptno, AVG(sal)
+FROM emp
+GROUP BY deptno
+
+SELECT e.ename
+FROM emp e 
+	JOIN (SELECT deptno, AVG(sal)avgsal FROM emp GROUP BY deptno) s ON e.deptno=s.deptno
+WHERE e.sal> s.avgsal
+
+
+--取得部门（所有人的）平均薪水的等级
+# 先求出部门的平均薪水
+SELECT deptno, AVG(sal) avgsal
+FROM emp
+GROUP BY deptno
+
+SELECT d.deptno, s.grade
+FROM salgrade s
+	JOIN (SELECT deptno, AVG(sal) avgsal FROM emp GROUP BY deptno) d on d.avgsal BETWEEN s.losal AND s.hisal
+
+
+--取得每个部门中所有人的薪水等级的平均等级
+SELECT e.deptno, avg(s.grade)
+FROM emp e JOIN salgrade s ON e.sal BETWEEN s.losal and s.hisal
+GROUP BY e.deptno
+
+
+
+--不准用分组函数（Max），取得最高薪水（给出两种解决方案）
+SELECT sal
+from emp
+ORDER BY sal DESC
+LIMIT 1
+
+
+SELECT sal
+from emp
+where sal not in (SELECT DISTINCT t.sal FROM (SELECT sal from emp) t JOIN (SELECT sal from emp)t2 ON t.sal<t2.sal)

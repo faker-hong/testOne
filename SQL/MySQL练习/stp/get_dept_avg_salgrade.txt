@@ -1,0 +1,9 @@
+DROP PROCEDURE IF EXISTS `get_dept_avg_salgrade`;
+delimiter //
+
+CREATE PROCEDURE `get_dept_avg_salgrade`()
+BEGIN
+    SELECT e.deptno, avg(s.grade)
+    FROM emp e JOIN salgrade s ON e.sal BETWEEN s.losal and s.hisal
+    GROUP BY e.deptno;
+END;//

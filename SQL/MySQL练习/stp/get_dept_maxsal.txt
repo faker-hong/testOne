@@ -1,0 +1,20 @@
+DROP PROCEDURE IF EXISTS `get_dept_maxsal`;
+delimiter //
+
+CREATE PROCEDURE `get_dept_maxsal`(
+	in dept_no int(2)
+)
+begin
+    create temporary table `maxsal`(
+        `deptno` int(2) not null,
+        `maxsal` double(7,2) default null,
+        primary key (`deptno`)
+    )Engine=InnoDB default charset utf8;
+    insert into maxsal select deptno, max(sal) from emp group by deptno;
+   
+    select distinct e.deptno, m.maxsal
+    from emp e join maxsal m on e.deptno=m.deptno
+    where e.deptno=dept_no;
+    drop temporary table `maxsal`;
+end;//
+delimiter ;
