@@ -189,6 +189,7 @@ def classify_images(images_dir, petlabel_dic, model):
         found = model_label.find(truth)
 
         if found >= 0:
+            # 如果匹配上truth，则返回第一个字母的索引
             if ((found == 0 and len(truth) == len(model_label)) or
                     (((found == 0) or (model_label[found - 1] == " ")) and
                      ((found + len(truth) == len(model_label)) or
