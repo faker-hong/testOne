@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
 import torch
+import torchvision
 from torch import nn
 from torch import optim
 import torch.nn.functional as F
@@ -11,18 +12,18 @@ import python人工智能课程.part4_Neural_Networks.learning_with_PyTorch.fc_m
 
 
 # Define a transform to normalize the data
-transform = transforms.Compose([
-     transforms.ToTensor(),
-     transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
-     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
- ])
+# transform = transforms.Compose([
+#      transforms.ToTensor(),
+#      transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
+#      transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+#  ])
 # Download and load the training data
-train_set = datasets.MNIST('MNIST_data/', download=True, train=True, transform=transform)
+train_set = datasets.MNIST('MNIST_data/', download=True, train=True, transform=torchvision.transforms.ToTensor())
 # batch_size 每批图片的数量， shuffle 每个epoch之后是否重新洗牌
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=64, shuffle=True)
 
 # Download and load the test data
-test_set = datasets.MNIST('MNIST_data/', download=True, train=False, transform=transform)
+test_set = datasets.MNIST('MNIST_data/', download=True, train=False, transform=torchvision.transforms.ToTensor())
 test_loader = torch.utils.data.DataLoader(test_set, batch_size=64, shuffle=True)
 
 

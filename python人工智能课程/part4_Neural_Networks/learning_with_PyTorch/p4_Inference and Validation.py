@@ -3,6 +3,7 @@ import numpy as np
 import time
 
 import torch
+import torchvision
 from torch import nn
 from torch import optim
 import torch.nn.functional as F
@@ -12,18 +13,18 @@ import python人工智能课程.part4_Neural_Networks.learning_with_PyTorch.help
 
 
 # Define a transform to normalize the data
-transform = transforms.Compose([
-     transforms.ToTensor(),
-     transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
-     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
- ])
+# transform = transforms.Compose([
+#      transforms.ToTensor(),
+#      transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
+#      transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+#  ])
 # Download and load the training data
-trainset = datasets.FashionMNIST('F_MNIST_data/', download=True, train=True, transform=transform)
+trainset = datasets.FashionMNIST('F_MNIST_data/', download=True, train=True, transform=torchvision.transforms.ToTensor())
 # batch_size 每批图片的数量， shuffle 每个epoch之后是否重新洗牌
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
 
 # Download and load the test data
-testset = datasets.FashionMNIST('F_MNIST_data/', download=True, train=False, transform=transform)
+testset = datasets.FashionMNIST('F_MNIST_data/', download=True, train=False, transform=torchvision.transforms.ToTensor())
 testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)
 
 
