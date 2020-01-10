@@ -1,0 +1,104 @@
+神经网络训练过程：
+	1.获取数据，数据处理(有为nan的数值等)，特征工程(标准化归一化，避免不同特征的数值大小影响结果)
+		例：
+			import torchvision
+			import torchvision.tansforms as transforms
+
+			# define transfrom 数据处理，归一化
+			transform = transforms.Compose(
+			    [transforms.ToTensor(),
+			     transforms.Normalize((.5, .5, .5), (.5, .5, .5))]  # mean与std
+			)
+
+			# get data_sets
+			train_sets = torchvision.datasets.CIFAR10('./data', download=True, train=True, transform=transform)
+			test_sets = torchvision.datasets.CIFAR10('./data', download=True, train=False, transform=transform)
+
+			# get data_loader
+			train_loader = torch.utils.data.DataLoader(train_sets, batch_size=64, shuffle=True)
+			test_loader = torch.utils.data.DataLoader(test_sets, batch_size=64, shuffle=True)
+
+	2.构建模型结构(卷积层，全连接层，池化层，激活函数)
+		例：
+			import torch.nn as nn
+			
+			# 3层全连接层，上一层的输出为下一层的输入，因为全连接需要1维的，所以32*32的图片为784像素
+			# 最后分类有10个类，输出就为10
+			# 这里为什么最后一层的output不用softmax激活函数后的结果，因为经过softmax后为概率分布，通过
+			# 接近0或者1，由于将数字表示为浮点数的不精确性，使用softmax输出的计算可能会失去准确性并变得不稳定
+			model = nn.Sequential(nn.Linear(784, 128),
+					     nn.ReLU(),
+					     nn.Linear(128, 64),
+					     nn.ReLU(),
+					     nn.Linear(64, 10))
+
+	3.训练模型
+		先定义优化器，误差函数，epochs等超参数。
+		1.先定义优化器，误差函数，超参数
+			optimizer = torch.optim.SGD(model.parameters(), lr=0.03)
+			err_func = nn.CrossEntropyLoss()
+			epochs = 5
+			print_every = 40
+			steps = 0
+			
+			for e in range(epochs):
+			          running_loss = 0
+			          for images, labels in iter(train_loader):
+				steps += 1
+				# 修改图片
+				images.resize_(images.size()[0], 784)
+
+				# 梯度清零
+				optimizer.zero_grad()
+
+				# forward pass
+				output = model.forward(images)
+				loss = err_func(output, labels)
+
+				# backward
+				loss.backward()
+				optimizer.step()
+					
+				running_loss += loss.item()
+
+				# 每隔print_every个输出epochs和误差
+				if steps % print_every == 0:
+					print("Epochs:{}/{}".format(e+1, epochs),
+					         "Loss:{:.4f}".format(running_loss / print_every))
+					
+					running_loss = 0
+
+	4.模型评估
+		tip：如果model输出层用的是log_softmax作为激活函数，需要把输出再调用exp函数才得到softmax的概率分布
+		因为指数函数与对数函数互为倒数
+
+		import torch.nn.functional as F
+		
+		test_loss = 0
+		accuracy = 0
+
+		for images, labels in iter(test_loader):
+			# 图片处理
+			images.resize_(images.size()[0], 784)
+
+			# forward
+			output = model.forward(images)
+			loss = err_func(output, labels)
+			test_loss += loss.item()
+			
+			# possiblity
+			ps = F.softmax(output)
+			equality = (labels == ps.max(dim=1)[1])
+			accuracy += equality.type(torch.FloatTensor).mean()
+		
+		test_loss = test_loss / len(test_loader)	# 测试误差
+		accuracy = accuracy / len(test_loader)	# 测试正确率
+
+
+
+梯度下降
+	比如一个函数y = ax,真实期望值是t
+	t = (A + a)x
+	E = t - y = Ax
+	所以A = E / x, E与误差项A存在某种关系
+	误差可以指导更新权重

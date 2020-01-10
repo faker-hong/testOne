@@ -21,6 +21,11 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)
 
 
 if __name__ == '__main__':
+    '''
+    这里为什么用output的原始输出，而并没有调用激活函数后的结果。
+    因为调用softmax后得到的是一个离散的概率分布，通常输出的值要么接近0，要么接近1.
+    由于将数字表示为浮点数的不精确性，使用softmax输出的计算可能会失去准确性并变得不稳定
+    '''
     # network architecture
     model = nn.Sequential(OrderedDict([
                            ('fc1', nn.Linear(784, 128)),
