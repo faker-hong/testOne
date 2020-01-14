@@ -18,20 +18,20 @@ attend_teams = data.Team.value_counts().count()
 # info = data.info()
 # print(info)
 
-# 4. View only the columns Team, Yellow Cards and Red Cards and assign them to a dataframe called discipline
+# 4.apply函数. View only the columns Team, Yellow Cards and Red Cards and assign them to a dataframe called discipline
 discipline = data[['Team', 'Yellow Cards', 'Red Cards']]
 # print(discipline)
 
-# 5.Sort the teams by Red Cards, then to Yellow Cards
+# 5.merge.Sort the teams by Red Cards, then to Yellow Cards
 # discipline.sort_values(['Red Cards', 'Yellow Cards'], ascending=False, inplace=True)
 # print(discipline)
 
-# 6.计算平均黄牌数
+# 6.统计.计算平均黄牌数
 avg_yellow_cards = data['Yellow Cards'].sum() / data.shape[0]
 avg_yellow_cards = np.around(avg_yellow_cards)
 # print(avg_yellow_cards)
 
-# 7.找出进球数大于6的球队
+# 7.可视化.找出进球数大于6的球队
 teams = data[data['Goals'] > 6]
 # print(teams)
 

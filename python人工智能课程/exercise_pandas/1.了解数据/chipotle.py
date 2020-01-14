@@ -7,7 +7,6 @@ import numpy as np
 # data.to_csv("./chipotle.csv")
 
 data = pd.read_csv("./chipotle.csv")
-
 # 1.查看数据集的大小
 data_number = data.shape[0]
 # print(data_number)
@@ -20,22 +19,22 @@ data_columns = data.shape[1]
 columns_all = data.columns
 # print(columns_all)
 
-# 4.订购最多的商品
+# 4.apply函数.订购最多的商品
 ordered_most = data.groupby("item_name").sum()
 goods_name = ordered_most.sort_values("quantity", ascending=False)
 # print(goods_name.head(1))
 
-# 5.有多少商品是被订购了的
+# 5.merge.有多少商品是被订购了的
 ordered_goods = data.groupby("item_name").sum()
 ordered_goods = ordered_goods[ordered_goods["quantity"] > 0]
 # print(ordered_goods.shape[0])
 
-# 6.在 choice_description中被订购最多的商品
+# 6.统计.在 choice_description中被订购最多的商品
 most_in_cd = data.groupby("choice_description").sum()
 most_in_cd = most_in_cd.sort_values("quantity", ascending=False)
 # print(most_in_cd.head(1))
 
-# 7.总共订购多少商品
+# 7.可视化.总共订购多少商品
 total_goods = data["quantity"].sum()
 # print(total_goods)
 

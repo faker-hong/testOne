@@ -18,11 +18,11 @@ result = drinks.groupby("continent").wine_servings.describe()
 result = drinks.groupby("continent").mean()
 # print(result)
 
-# 4.Print the median alcohol consumption per continent for every column
+# 4.apply函数.Print the median alcohol consumption per continent for every column
 result = drinks.groupby("continent").median()
 # print(result)
 
-# 5.Print the mean, min and max values for spirit consumption
+# 5.merge.Print the mean, min and max values for spirit consumption
 result_1 = drinks.groupby("continent")["spirit_servings"].describe()
 result_2 =drinks.groupby("continent").spirit_servings.agg(['mean', 'min', 'max'])
 # print(result_1)

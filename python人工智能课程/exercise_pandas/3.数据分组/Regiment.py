@@ -22,11 +22,11 @@ result = data.groupby("company").describe()
 result = data.groupby("company").mean()['preTestScore']
 # print(result)
 
-# 4.Present the mean preTestScores grouped by regiment and company
+# 4.apply函数.Present the mean preTestScores grouped by regiment and company
 result = data.groupby(['regiment', 'company']).preTestScore.mean()
 # print(result)
 
-# 5. Present the mean preTestScores grouped by regiment and company without heirarchical indexing
+# 5.merge. Present the mean preTestScores grouped by regiment and company without heirarchical indexing
 '''
     stack()函数将行索引变为列索引
     unstack()反之
@@ -37,11 +37,11 @@ a = data.groupby(['regiment', 'company']).preTestScore.mean()
 # print("------------------")
 # print(a)
 
-# 6.Group the entire dataframe by regiment and company
+# 6.统计.Group the entire dataframe by regiment and company
 result = data.groupby(['regiment', 'company']).mean()
 # print(result)
 
-# 7.What is the number of observations in each regiment and company
+# 7.可视化.What is the number of observations in each regiment and company
 result = data.groupby(['regiment', 'company']).size()
 # print(result)
 
