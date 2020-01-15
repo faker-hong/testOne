@@ -1,0 +1,99 @@
+1.从csv文件中读取数据和保存数据到scv文件
+	----------读取
+		df = pd.read_csv('文件地址'，sep='分隔符')
+	----------保存
+		df.to_csv('保存的地址')
+
+
+2.DateFrame的属性
+	----shape   形状，行列
+	----column 列
+	----index 索引
+
+	方法
+	----describe 获取数据详细信息，最大最小值等
+
+3.pandas类型转换
+	Pandas中进行数据类型转换有三种基本方法：
+
+    	1.使用astype()函数进行强制类型转换，数据中有缺失值或者特殊字符会失效
+
+   	2.自定义函数进行数据类型转换
+
+   	3.使用Pandas提供的函数如to_numeric()、to_datetime()
+
+4.apply函数’
+	--对某一列或一个单元格的数据进行apply里函数的调用
+		df['列名'].apply(func)
+		
+		--作用于DataFrame中的每一个元素
+		df.applymap(func)
+
+5.values_count()计数函数
+	----查看表格某列中有多少个不同值的快捷方法，并计算每个不同值有在该列中有多少重复值。
+
+	# 这里Team是列名
+	df.Team.value_counts()
+
+	----计算有多少个不同的Team
+	df.Team.value_counts().count()
+
+
+6.startwith() 函数
+	例：找出开头第一个为G的球队
+		data[data['Team'].str.startswith('G')]
+		
+
+7.数据定位
+	总的来说，分为两种：
+
+		一种是通过lables(即row index和column names，这里row index可以字符，日期等非数字index)(使用loc, at);
+		df.loc[:, ['age', 'city']]
+
+		另一种通过index(这里特指数字位置index)(使用iloc, iat)
+		df.iloc[3:20, 2:5]
+
+		loc和at的区别在于， loc可以选择特定的行或列，但是at只能定位某个特定的值，标量值。
+		一般情况下，我们iloc和loc更加通用，而at, iat有一定的性能提升。
+
+
+8.isin函数
+	result = result[result.Team.isin(['England', 'Italy', 'Russia'])]
+
+
+9.groupby 函数
+	分组函数，一般用于求和，求平均等
+	result = data.groupby("company").mean()
+
+	在对列进行groupby后，会将列转为索引，之后用stack可以转回来
+
+10.stack于unstack函数
+	   	stack()函数将行索引变为列索引
+    		unstack()反之
+
+
+11.处理NaN数据
+
+	1.fillna()	把NaN数据填补为想要的数据
+	
+	2.dropna()    把有缺失值的数据删除
+
+12.merge函数
+	
+	----类似于数据库的表连接，how表示连接的方式(左连接，右连接，内连接，外连接)，on表示关联的字段
+	pd.merge(data1, data2, how='left', on='id')
+	
+
+13.resample函数
+
+	----改变采样
+		data.resample('采样规则')	采样规则可以以星期，月，年等为间隔采样
+
+14.排序函数
+	
+	----按索引排序，ascending是否为降序
+	sort_index(ascending=True)
+
+	sort_values()
+		# 若axis=0或’index，则按照指定列中数据大小排序；若axis=1或’columns’，则按照指定索引中数据大小排序，默认axis=0
+		df.sort_values(by='列名'， axis=0)
