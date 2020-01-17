@@ -1,0 +1,32 @@
+1.修改绘图坐标轴
+	plt.xlim(-1, 1)	限制x轴的显示范围
+	plt.ylim(-1, 1)	限制y轴的显示范围
+
+	# 设置坐标轴标签，rotation是标签旋转的角度
+
+	plt.xticks(range(9),['02-01','02-02','02-03','02-04',
+                     	'02-05','02-06','02-07','02-08','02-09'],rotation=45)
+
+2.添加文本
+	plt.title()		标题
+	plt.xlabel()	x轴标签
+	plt.ylabel()	y轴标签
+
+
+3.网格
+	plt.gird()
+
+4.图列
+	plt.legend(loc='')	# loc图例显示的位置
+
+
+5.subplots()
+	# 返回的是画布和子图
+	fig, axes = plt.subplots(nrows=1, ncols=2)
+
+	# 也可以像list一样用索引去取第一个子图怎么画
+	for ax in axes:
+    	      ax.plot(x, y, 'r')
+    	      ax.set_xlabel('x')
+    	      ax.set_ylabel('y')
+    	      ax.set_title('title')
