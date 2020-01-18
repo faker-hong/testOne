@@ -24,9 +24,61 @@
 	# 返回的是画布和子图
 	fig, axes = plt.subplots(nrows=1, ncols=2)
 
-	# 也可以像list一样用索引去取第一个子图怎么画
+	# 设置子图间的间隙
+	fig.tight_layout(pad=5, h_pad=2, w_pad=2)
+
+	
+	# 将子图展开赋值给axes
+	axes = ax.flatten()
+
+	这里是每张图都有坐标系，无法画入饼图和箱型图
+	通过测试，可以用plt.subplot(1, 2, 1)来定位后进行画图
+
+	# 也可以像list一样用索引去取第一个子图
 	for ax in axes:
     	      ax.plot(x, y, 'r')
     	      ax.set_xlabel('x')
     	      ax.set_ylabel('y')
     	      ax.set_title('title')
+
+6.直方图
+	# 对于定量数据的分析，一般采用直方图
+	# 对于定性数据的分布，一般采用柱状图
+	
+	# orientation直方图的方向， cumulative是否排序
+	plt.hist(data, bins, color='fuchsia', orientation='horizontal', cumulative=True)
+
+7.箱型图
+	箱型图：又称为盒须图、盒式图、盒状图或箱线图，是一种用作显示一组数据分散情况资料的统计图
+包含一组数据的：最大值、最小值、中位数、上四分位数（Q3）、下四分位数（Q1）、异常值
+① 中位数 → 一组数据平均分成两份，中间的数
+② 上四分位数Q1 → 是将序列平均分成四份，计算(n+1)/4与(n-1)/4两种，一般使用(n+1)/4
+③ 下四分位数Q3 → 是将序列平均分成四份，计算(1+n)/4*3=6.75
+④ 内限 → T形的盒须就是内限，最大值区间Q3+1.5IQR,最小值区间Q1-1.5IQR （IQR=Q3-Q1）
+⑤ 外限 → T形的盒须就是内限，最大值区间Q3+3IQR,最小值区间Q1-3IQR （IQR=Q3-Q1）
+⑥ 异常值 → 内限之外 - 中度异常，外限之外 - 极度异常
+
+# plt.plot.box()绘制
+
+fig,axes = plt.subplots(2,1,figsize=(10,6))
+df = pd.DataFrame(np.random.rand(10, 5), columns=['A', 'B', 'C', 'D', 'E'])
+color = dict(boxes='DarkGreen', whiskers='DarkOrange', medians='DarkBlue', caps='Gray')
+# 箱型图着色
+# boxes → 箱线
+# whiskers → 分位数与error bar横线之间竖线的颜色
+# medians → 中位数线颜色
+# caps → error bar横线颜色
+
+df.plot.box(ylim=[0,1.2],
+           grid = True,
+           color = color,
+           ax = axes[0])
+# color：样式填充
+
+df.plot.box(vert=False, 
+            positions=[1, 4, 5, 6, 8],
+            ax = axes[1],
+            grid = True,
+           color = color)
+# vert：是否垂直，默认True
+# position：箱型图占位
