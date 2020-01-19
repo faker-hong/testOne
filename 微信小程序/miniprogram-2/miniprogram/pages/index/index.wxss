@@ -1,0 +1,12 @@
+/**index.wxss**/
+.window{
+  color: yellowgreen;
+  text-align: right;
+}
+.newindow{
+  color: red;
+}
+.title{
+  text-align: center;
+  font-size: 24px;
+}
