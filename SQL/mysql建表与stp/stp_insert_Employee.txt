@@ -1,0 +1,56 @@
+delimiter //
+
+DROP PROCEDURE IF EXISTS `insert_to_Employee` //
+
+
+CREATE PROCEDURE insert_to_Employee(
+	IN employee_no_in int(10),
+	IN employee_name_in varchar(20),
+	IN sex_in varchar(2),
+	IN birthday_in date,
+	IN address_in varchar(255),
+	IN telephone_in int(11),
+	IN hiredate_in date,
+	-- IN department_in varchar(30),
+	IN headship_in varchar(20),
+	IN salary_in decimal(8,2)
+)
+BEGIN
+	INSERT INTO employee
+	(employee_no,
+	employee_name,
+	sex,
+	birthday,
+	address,
+	telephone,
+	hiredate,
+	department,
+	headship,
+	salary
+	)
+	VALUES
+	(employee_no_in,
+	employee_name_in,
+	sex_in,
+	birthday_in,
+	address_in,
+	telephone_in,
+	hiredate_in,
+	'业务部',
+	headship_in,
+	salary_in);
+END//
+DELIMITER ;
+
+
+CALL insert_to_Employee(
+    '2222',
+    '无极',
+    'F',
+    '2001-10-22',
+    '北海道',
+    '1231232',
+    '2001-10-22',
+    '老板',
+    '1333'
+);

@@ -1,0 +1,36 @@
+delimiter //
+
+/*
+计算订单的总额，是否带税
+parameters:
+	orderNumber	--订单号
+	orderTotal	--订单总额
+	tax		--是否需要增加营业税
+*/
+
+
+CREATE PROCEDURE ordertotal(
+	IN orderNuber INT,
+	IN tax BOOLEAN,
+	OUT ordertotal DECIMAL(8,2)
+)
+BEGIN
+    DECLARE total DECIMAL(8,2);	--定义局部total
+    DECLARE taxrate INT DEFAULT 8;	--定义税率为8%
+
+    SELECT SUM(itemprice * quantity)
+    FROM order
+    WHERE order_Number=orderNumber
+    INTO total;
+
+--判断需要增加营业税后的订单总额
+    IF tax then
+        SELECT total + (total * taxrate / 100) into total;
+    END IF;
+    
+    SELECT total INTO orderTotal;
+
+END;
+
+
+DELIMITER ;

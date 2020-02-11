@@ -1,0 +1,14 @@
+CREATE TABLE IF EXISTS `Employee`;
+
+CREATE TABLE IF NOT EXISTS `Employee`(
+    `employee_no` INT(10) NOT NULL,
+    `employee_name` VARCHAR(20) NOT NULL,
+    `sex` VARCHAR(2) DEFAULT 'F',
+    `birthday` DATE DEFAULT NULL,
+    `address` VARCHAR(255) DEFAULT NULL,
+    `telephone` INT(11) NOT NULL,
+    `hiredate` DATE DEFAULT NULL,
+    `department` VARCHAR(20) DEFAULT NULL,
+    `headship` VARCHAR(20) DEFAULT NULL,
+    `salary` 	FLOAT NOT NULL
+)

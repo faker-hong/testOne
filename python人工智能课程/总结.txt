@@ -44,7 +44,7 @@
 			for e in range(epochs):
 			          running_loss = 0
 			          for images, labels in iter(train_loader):
-				steps += 1
+				steps += 1 
 				# 修改图片
 				images.resize_(images.size()[0], 784)
 

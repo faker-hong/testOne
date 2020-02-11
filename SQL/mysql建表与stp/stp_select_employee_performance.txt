@@ -1,0 +1,22 @@
+DROP PROCEDURE IF EXISTS select_employee_performance;
+DELIMITER //
+
+CREATE PROCEDURE select_employee_performance(
+    IN employee_name_in varchar(10)
+)comment '利用存储过程查找某员工的员工编号、订单编号、销售金额'
+BEGIN
+	SELECT
+	    saler_no,
+	    order_no,
+	    order_sum,
+	FROM
+	    employee
+	LEFT JOIN order_master ON employee_no = salar_no
+	WHERE 
+	    employee_name = employee_name_in
+	ORDER BY
+	    saler_no;
+END //
+DELIMITER ;
+
+CALL select_employee_performance('97');
