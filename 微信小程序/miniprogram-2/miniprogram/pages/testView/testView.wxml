@@ -1,0 +1,12 @@
+<view class='section'>
+  <view>view组件</view>
+  <!--hover-class表示的是按下组件后表现出来的样式类，在wxss中设置-->
+  <view class="view-parent-container" hover-class="hover-parent-container">
+    <view class="view-container"
+      hover-class="hover-container"
+      hover-stop-propagation="true"
+      hover-start-time="1500"
+      hover-stay-time="800">
+    </view>
+  </view>
+</view>

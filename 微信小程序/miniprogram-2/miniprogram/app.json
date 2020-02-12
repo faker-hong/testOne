@@ -1,5 +1,8 @@
 {
   "pages": [
+    "pages/testscrollview/testscrollview",
+    "pages/testView/testView",
+    "pages/test/test",
     "pages/index/index",
     "pages/demo/demo"
   ],
@@ -9,5 +12,6 @@
     "navigationBarBackgroundColor": "#F6F6F6",
     "navigationBarTitleText": "云开发 QuickStart",
     "navigationBarTextStyle": "black"
-  }
+  },
+  "sitemapLocation": "sitemap20.json"
 }

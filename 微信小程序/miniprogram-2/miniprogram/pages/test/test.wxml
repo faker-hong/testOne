@@ -1,0 +1,9 @@
+<template name='tempItem'>
+  <view class="h">
+    <view class="c">姓名：{{name}}</view>
+    <view>性别：{{sex}}</view>
+    <view>联系方式：{{phone}}</view>
+  </view>
+</template>
+
+<template is="tempItem" data="{{...item}}"></template>
