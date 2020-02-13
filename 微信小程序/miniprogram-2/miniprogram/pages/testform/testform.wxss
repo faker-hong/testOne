@@ -1,0 +1,8 @@
+button{
+  background: cornflowerblue;
+  margin: 5px;
+}
+
+.gap-view{
+  margin: 30px;
+}

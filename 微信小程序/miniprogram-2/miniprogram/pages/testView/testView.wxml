@@ -10,3 +10,6 @@
     </view>
   </view>
 </view>
+
+<navigator url="../index/index" 
+  style="background: green; line-height:30px; text-align:center;">返回index页面</navigator>

@@ -1,9 +1,10 @@
 {
   "pages": [
+    "pages/index/index",
+    "pages/testform/testform",
     "pages/testscrollview/testscrollview",
     "pages/testView/testView",
     "pages/test/test",
-    "pages/index/index",
     "pages/demo/demo"
   ],
   "window": {

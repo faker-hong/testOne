@@ -7,3 +7,6 @@
 </template>
 
 <template is="tempItem" data="{{...item}}"></template>
+
+<navigator url="../index/index" 
+  style="background: green; line-height:30px; text-align:center;">返回index页面</navigator>

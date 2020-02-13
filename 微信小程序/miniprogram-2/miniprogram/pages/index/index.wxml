@@ -7,3 +7,11 @@
 <view>
   <label>{{content}}</label>
 </view>
+
+<view class="gap-view">
+  <navigator url="../demo/demo" class="na">跳转到demo页面</navigator>
+  <navigator url="../test/test" class="na">跳转到test页面</navigator>
+  <navigator url="../testView/testView" class="na">跳转到View页面</navigator>
+  <navigator url="../testform/testform" class="na">跳转到form页面</navigator>
+  <navigator url="../testscrollview/testscrollview" class="na">跳转到scrollview页面</navigator>
+</view>

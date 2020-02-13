@@ -1,2 +1,5 @@
 <!--pages/demo/demo.wxml-->
-<text>pages/demo/demo.wxml</text>
+<text>demo</text>
+
+<navigator url="../index/index" 
+  style="background: green; line-height:30px; text-align:center;">返回index页面</navigator>

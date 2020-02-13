@@ -1,3 +1,6 @@
+<navigator url="../index/index" 
+  style="background: green; line-height:30px; text-align:center;">返回index页面</navigator>
+  
 <view>scroll-view 组件</view>
 <view class="section">
   <view class="section-title">竖向滚动</view>
@@ -33,3 +36,4 @@
     <view id="blue" class="scroll-view-item_H bc_blue"></view>
     </scroll-view>
 </view>
+
