@@ -14,4 +14,5 @@
   <navigator url="../testView/testView" class="na">跳转到View页面</navigator>
   <navigator url="../testform/testform" class="na">跳转到form页面</navigator>
   <navigator url="../testscrollview/testscrollview" class="na">跳转到scrollview页面</navigator>
+  <navigator url="../testvideo/testvideo" class="na">跳转到Video页面</navigator>
 </view>
