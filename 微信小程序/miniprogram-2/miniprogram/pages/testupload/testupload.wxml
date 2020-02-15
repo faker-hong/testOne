@@ -1,0 +1,10 @@
+<view class="container">
+  <block wx:if="{{imgUrl}}">
+    <image src="{{imgUrl}}"></image>
+  </block>
+
+  <block>
+    <button bindtap="chooseImg">选择图片</button>
+    <navigator url="../index/index">返回index页面</navigator>
+  </block>
+</view>
