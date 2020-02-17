@@ -1,7 +1,9 @@
 {
   "pages": [
-    "pages/testupload/testupload",
     "pages/index/index",
+    "pages/messagePrompt/messagePrompt",
+    "pages/mapManager/mapManager",
+    "pages/testupload/testupload",
     "pages/testform/testform",
     "pages/testscrollview/testscrollview",
     "pages/testView/testView",

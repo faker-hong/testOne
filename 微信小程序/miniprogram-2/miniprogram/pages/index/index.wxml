@@ -15,4 +15,7 @@
   <navigator url="../testform/testform" class="na">跳转到form页面</navigator>
   <navigator url="../testscrollview/testscrollview" class="na">跳转到scrollview页面</navigator>
   <navigator url="../testvideo/testvideo" class="na">跳转到Video页面</navigator>
+  <navigator url="../testupload/testupload" class="na">跳转到testupload页面</navigator>
+  <navigator url="../messagePrompt/messagePrompt" class="na">跳转到messagePropmt页面</navigator>
+  <navigator url="../mapManager/mapManager" class="na">跳转到mapManager页面</navigator>
 </view>

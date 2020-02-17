@@ -1,0 +1,5 @@
+<view class="btn-area">
+  <button bindtap="toastTap">点击弹出toast</button>
+  <button bindtap="modalTap">点击弹出modal</button>
+  <button bindtap="actionSheetTap">点击弹出action sheet</button>
+</view>

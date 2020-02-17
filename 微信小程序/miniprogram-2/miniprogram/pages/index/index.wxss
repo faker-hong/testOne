@@ -15,7 +15,7 @@
 }
 .na{
   background: #c9c9c9;
-  line-height: 50px;
-  margin: 30px;
+  line-height: 30px;
+  margin: 5px;
   text-align: center;
 }
