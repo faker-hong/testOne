@@ -1,0 +1,53 @@
+CREATE TABLE IF NOT EXISTS `users`(
+    `id` INT(64) NOT NULL AUTO_INCREMENT,
+    `uid` VARCHAR(128) NOT NULL COMMENT '用户openid',
+    `uname` VARCHAR(40) COMMENT '用户微信名',
+    `ugender` INT(1) DEFAULT NULL COMMENT '用户性别',
+    `uaddress` VARCHAR(128) DEFAULT NULL COMMENT '用户地址',
+    `ubalance` INT(11) DEFAULT NULL COMMENT '用户积分余额',
+    `uavatar` VARCHAR(128) DEFAULT NULL COMMENT '用户头像',
+    `skey` VARCHAR(128) NOT NULL COMMENT '用户登录态标识',
+    `sessionkey` VARCHAR(128) NOT NULL COMMENT '微信登录态标识',
+    `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户注册时间',
+    `update_time` DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户最近登录时间',
+    PRIMARY KEY(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS `orders`(
+    `oid` INT(11) NOT NULL AUTO_INCREMENT COMMENT '订单id',
+    `uid` VARCHAR(128) NOT NULL COMMENT '用户openid',
+    `oprice` INT(11) DEFAULT 0 COMMENT '书籍价格',
+    `otime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '订单创建时间',
+    `bkid` INT(16) DEFAULT NULL COMMENT '书籍id',
+    PRIMARY KEY(`oid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS `comment`(
+    `cmid` INT(16) NOT NULL AUTO_INCREMENT COMMENT '评论id',
+    `uid` VARCHAR(128) NOT NULL COMMENT '用户openid',
+    `uname` VARCHAR(48) NOT NULL COMMENT '用户名称',
+    `ccontent` VARCHAR(128) DEFAULT NULL COMMENT '评论内容',
+    `bkname` VARCHAR(16) NOT NULL COMMENT '书籍名称',
+    `bkid` INT(16) NOT NULL COMMENT '书籍id',
+    `uavatar` VARCHAR(128) NOT NULL COMMENT '用户头像',
+    `ctime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
+    PRIMARY KEY (`cmid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS `books`(
+    `bkid` INT(16) NOT NULL AUTO_INCREMENT COMMENT '书籍id',
+    `bkclass` INT(11) DEFAULT NULL COMMENT '书籍类别',
+    `bkname` VARCHAR(48) NOT NULL COMMENT '书籍名称',
+    `bkauthor` VARCHAR(32) NOT NULL COMMENT '书籍作者',
+    `bkpublisher` VARCHAR(16) DEFAULT NULL COMMENT '书籍出版社',
+    `bkfile` VARCHAR(256) NOT NULL COMMENT '书籍文件地址',
+    `bkcover` VARCHAR(120) COMMENT '书籍封面',
+    `bkprice` INT(11) DEFAULT 1 COMMENT '书籍积分',
+    PRIMARY KEY (`bkid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
