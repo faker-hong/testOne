@@ -1,0 +1,16 @@
+<form bindsubmit="formSubmit" bindreset="formReset">
+  <view class="zhanghao">
+    <view>账号：</view>
+    <input name="zhanghao" placeholder="请输入账号"></input>
+  </view>
+
+  <view class="password">
+    <view>密码：</view>
+    <input name="password" placeholder="请输入密码"></input>
+  </view>
+
+  <view class="BtnArea">
+    <button form-type="submit" type="primary">登录</button>
+    <button form-type="reset" type="primary">重置</button>
+  </view>
+</form>
