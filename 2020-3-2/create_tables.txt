@@ -1,0 +1,13 @@
+create table if not EXISTS `visits`(
+`user_id` int,
+`visit_date` date
+)
+
+ALTER table `visits` add PRIMARY KEY (`user_id`, `visit_date`)
+
+
+CREATE table if not EXISTS `transactions`(
+`user_id` int,
+`transaction_date` date,
+`amount` int
+)
