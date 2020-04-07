@@ -1,0 +1,44 @@
+filter的数量代表学习到的特征数。
+kernel_size为窗口的大小。
+strides为窗口移动的步长。
+padding为数据不足窗口的大小是，两种类型	
+				--same    不足窗口大小的部分舍弃
+				--valid     不足窗口大小的默认用0补足
+
+池化层
+	MaxPooling2D		选取每个窗口的最大值
+	GlobalAveragePooling2D	选取用窗口移动后获得的数据的sum值后的avg值
+
+
+---------先设置ModelCheckpoint
+keras.callbacks.ModelCheckpoint( filepath,
+    monitor='val_loss',
+    verbose=0,
+    save_best_only=False,
+    save_weights_only=False,
+    mode='auto',
+    period=1
+)
+
+filename：字符串，保存模型的路径
+
+monitor：需要监视的值，val_acc或这val_loss 3. verbose：信息展示模式，0为不打印输出信息，1打印
+
+save_best_only：当设置为True时，将只保存在验证集上性能最好的模型
+
+mode：‘auto’，‘min’，‘max’之一，在save_best_only=True时决定性能最佳模型的评判准则，
+	例如，当监测值为val_acc时，模式应为max，当检测值为val_loss时，模式应为min。在auto模式下，评价准则由被监测值的名字自动推断。
+
+save_weights_only：若设置为True，则只保存模型权重，否则将保存整个模型（包括模型结构，配置信息等）
+
+period：CheckPoint之间的间隔的epoch数
+
+
+----------训练模型
+hist = model.fit(x_train, y_train, batch_size=32, epochs=100, validation_data=(x_valid, y_valid),
+                 callbacks=[checkpoint], verbose=2, shuffle=True)
+
+
+----------查看测试集上的效果
+score = model.evaluate(x_test,  y_test, verbose=0)
+accuracy = score[1]*100
