@@ -1,0 +1,108 @@
+L1正则化：稀疏参数，损失函数采用绝对值，常用于特征的筛选
+
+L2正则化：损失函数采用平方，模型更稳定和准确
+
+主成分分析（PCA）：
+from sklearn.decomposition import PCA
+常用于非监督学习，n_components表示主成分的数量
+
+
+卷积层：
+
+# 构建model结构
+model = Sequential()
+model.add(Conv2D(filters=16, kernel_size=2, padding='same', activation='relu', input_shape=(32, 32, 3)))
+model.add(MaxPooling2D(pool_size=2))
+model.add(Conv2D(filters=32, kernel_size=2, padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=2))
+model.add(Conv2D(filters=64, kernel_size=2, padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=2))
+model.add(Dropout(0.3))
+model.add(Flatten())
+model.add(Dense(500, activation='relu'))
+model.add(Dropout(0.3))
+model.add(Dense(10, activation='softmax'))
+
+
+# 编译模型
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop',
+              metrics=['accuracy'])
+
+# 训练
+checkpoint = ModelCheckpoint(filepath='model.weights.best.hdf5', verbose=1, save_best_only=True)
+hist = model.fit(x_train, y_train, batch_size=32, epochs=100, validation_data=(x_valid, y_valid),
+                 callbacks=[checkpoint], verbose=2, shuffle=True)
+
+# 保存model
+model.load_weights('model.weights.best.hdf5')
+
+# 测试集准确率
+score = model.evaluate(x_test, y_train, verbose=0)
+
+# 查看model结构
+model.summary()
+
+
+参数介绍Conv2D：
+filters：filters的数量， 
+kernel_size：窗口的长宽，
+padding：'same'或'valid', same表示不足窗口大小进行填充， valid表示不足窗口大小不填充
+activation：激活函数，
+input_shape：第一层需要写明，（长，宽，channel）
+
+
+参数介绍MaxPooling2D：
+pool_siz：移动窗口的大小，一般与上一层卷积的filter大小相同
+该层表示pool_size大小的窗口取最大值
+
+
+参数介绍GlobalAveragePooling2D：
+每一张特征图计算所有像素点的均值，输出一个数据值，10个特征图就有10个像素点。
+
+Flatten层：
+因为全连接层需要一维的数据，Flatten层将数据转换为1维的，如图片为(64,64,3)的，转为一维就是12288
+
+模型编译 model.compile()：
+参数介绍：
+metrics： 可以是列表的形式，多个函数，指明准确率等
+optimizer： 优化器，
+loss：损失函数
+
+
+参数介绍ModelCheckpoint：
+filepath：保存模型的路径，
+monitor：需要监视的值，
+verbose：信息展示状态， 0 在控制台没有任何输出，1 显示进度条， 2 为每个epoch输出一条记录
+save_best_only：监视值有改进时才会保存当前模型
+
+
+
+Reinforcement Learning：
+state(状态)， action(动作)， reward(奖励)
+s0, a0, r1, s1, a1, r2......st, at, rt+1
+
+阶段性任务和持续性任务：
+	--阶段性任务：有一个明确的结束状态
+
+	--持续性任务：一直连续的任务，没有结束状态
+
+强化学习的目标就是--最大化累积奖励
+
+
+折扣回报：
+	为了最大化累积奖励，代理会根据之后的奖励指定方案，但之后的奖励并不是百分百能得到，所有每一个state后的reward都会乘以
+	一个[0, 1]之间的数，代理更注重当前或近几个的reward
+
+状态值函数：
+	V(s) = E[Rt|st=s]
+
+动作值函数：
+	Q(s, a) = E[Rt|st=s, at=a]
+
+
+
+
+
+
+
+
