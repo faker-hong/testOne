@@ -18,6 +18,17 @@ rabbbit
 rabbbit
 ^^^ ^^^
 
+dp[i][j]的值为
+S中[0-j]能构成T[0-i]多少次
+
+动态方程：
+如果字母相等会出现两种情况，如果'abab'和'ab',
+要是b都选取末尾的，那就是dp[i-1][j-1],
+要是S不取末尾的，那就是dp[i][j-1],两种情况需要相加，
+则：dp[i][j] = dp[i-1][j-1] + dp[i][j-1]
+
+如果不相等：
+则：dp[i][j] = dp[i][j-1]
 '''
 
 
@@ -35,3 +46,10 @@ def numDistinct(s, t):
             else:
                 dp[i][j] = dp[i][j - 1]
     return dp[-1][-1]
+
+
+if __name__ == '__main__':
+    s = 'word'
+    t = 'ab'
+    times = numDistinct(s, t)
+    print(times)
