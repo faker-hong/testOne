@@ -1,6 +1,6 @@
 	case用法储存过程
 delimiter //
-create procedure test_case(int book_id int)
+create procedure test_case(in book_id int)
 begin
 declare var int;
 set var=book_id+1;
