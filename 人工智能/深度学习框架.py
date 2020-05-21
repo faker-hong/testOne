@@ -41,6 +41,7 @@ from sklearn.preprocessing import minmax_scale, StandardScaler
 
 
 # 归一化，把数据映射到自定义范围内，避免某些特征max，min差别过大影响target，适用小数据
+# 如果添加的数据max，min值出现异常的话，会影响target
 def minmax_scale_demo():
     # 数据格式： 每年消耗公里数， 每年消耗冰淇淋重量， 每年出游时间占比，target
     data = pd.read_csv("")
@@ -52,6 +53,11 @@ def minmax_scale_demo():
 
 
 # 标准化, 不易受到异常点影响，适用大数据
+'''
+1、在分类、聚类算法中，需要使用距离来度量相似性的时候、或者使用PCA技术进行降维的时候，StandardScaler表现更好。
+
+2、在不涉及距离度量、协方差计算、数据不符合正太分布的时候，可以使用MinMaxScaler。比如图像处理中，将RGB图像转换为灰度图像后将其值限定在[0 255]的范围。
+'''
 def StandardScaler_demo():
     # 数据格式： 每年消耗公里数， 每年消耗冰淇淋重量， 每年出游时间占比，target
     data = pd.read_csv("")
