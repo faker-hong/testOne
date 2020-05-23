@@ -1,5 +1,7 @@
 from keras.datasets import imdb
 import numpy as np
+from keras import models
+from keras import layers
 
 
 # 获取训练集与测试集， 前10000个常频词
@@ -40,3 +42,33 @@ test_data = convert_to_one_hot(test_data)
 # 将标签也进行向量化
 train_label = np.asarray(train_label).astype('float32')
 test_label = np.asarray(test_label).astype('float32')
+
+
+# 定义model
+model = models.Sequential()
+model.add(layers.Dense(16, activation='relu', input_shape=(10000, )))
+model.add(layers.Dense(16, activation='relu'))
+model.add(layers.Dense(1, activation='sigmoid'))
+
+# 编译
+model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
+
+# 分割数据，在训练集中分割出验证集
+valid_data = train_data[:10000]
+train_features = train_data[10000:]
+
+valid_label = train_label[:10000]
+train_traget = train_label[10000:]
+
+history = model.fit(train_features, train_traget,
+          batch_size=512, epochs=20, validation_data=(valid_data, valid_label))
+
+# 当我们调用model.fit()的时候，返回一个History对象。这个对象有一个成员history，它是一个字典，包含训练过程中的所有数据。
+history_dic = history.history
+acc = history_dic['acc']
+val_acc = history_dic['val_acc']
+loss = history_dic['loss']
+val_loss = history_dic['val_loss']
+
+# 进行预测
+results = model.evaluate(test_data, test_label)
