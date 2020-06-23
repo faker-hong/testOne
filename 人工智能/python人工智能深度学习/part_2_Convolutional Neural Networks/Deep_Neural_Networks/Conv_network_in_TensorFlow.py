@@ -50,7 +50,7 @@ def conv_net(x, weights, biases, dropout):
 
     # layer 2 - 14*14*32 to 7*7*64
     conv2 = conv2d(conv1, weights['wc2'], biases['bc2'])
-    conv2 = max(conv2, k=2)
+    conv2 = maxpool2d(conv2, k=2)
 
     # layer -3 fully connected layer  7*7*64 to 1024
     fc1 = tf.reshape(conv2, [-1, weights['wd1'].get_shape().as_list()[0]])
