@@ -118,7 +118,7 @@ def train(epoch_count, batch_size, z_dim, out_dim, learning_rate, beta1, get_bat
 
     with tf.Session() as sess:
         # 全局变量初始化
-        sess.run(tf.global_variables_initializer)
+        sess.run(tf.global_variables_initializer())
 
         for epoch_i in epoch_count:
             for image_batch in get_batches(batch_size):
