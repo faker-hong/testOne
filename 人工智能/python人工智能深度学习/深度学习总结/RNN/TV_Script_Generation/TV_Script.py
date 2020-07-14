@@ -91,13 +91,13 @@ int_text, vocab_to_int, int_to_vocab, token_dict = helper.load_preprocess()
         build_nn
         get_batches
 '''
-def get_inputs(n_steps):
+def get_inputs():
     """
     为input, targets, and learning rate 创建占位符
     :return: Tuple (input, targets, learning rate)
     """
-    inputs = tf.placeholder(tf.int32, [None, n_steps], name='input')
-    targets = tf.placeholder(tf.int32, [None, n_steps], name='targets')
+    inputs = tf.placeholder(tf.int32, [None, None], name='input')
+    targets = tf.placeholder(tf.int32, [None, None], name='targets')
     learning_rate = tf.placeholder(tf.float32)
     keep_prob = tf.placeholder(tf.float32, name='keep_prob')
     return inputs, targets, learning_rate, keep_prob
@@ -281,7 +281,7 @@ save_dir = './save'
 train_graph = tf.Graph()
 with train_graph.as_default():
     vocab_size = len(int_to_vocab)
-    input_text, targets, lr, keep_prob = get_inputs(n_steps=seq_length)
+    input_text, targets, lr, keep_prob = get_inputs()
     input_data_shape = tf.shape(input_text)
     multi_cell, initial_state, initial_state1 = get_init_cell(
         input_data_shape[0], rnn_size, keep_prob)
@@ -346,21 +346,24 @@ def training():
         print('Model Trained and Saved')
 
 
+# Save parameters for checkpoint
+helper.save_params((seq_length, save_dir))
+
+
 # todo 生成电视剧本
 
 # checkpoints
-# _, vocab_to_int, int_to_vocab, token_dict = helper.load_preprocess()
-# seq_length, load_dir = helper.load_params()
+_, vocab_to_int, int_to_vocab, token_dict = helper.load_preprocess()
+seq_length, load_dir = helper.load_params()
 
-# print(load_dir)
 """
 ### Get Tensors
-使用函数[`get_tensor_by_name()`](https://www.tensorflow.org/api_docs/python/tf/Graph#get_tensor_by_name)中的方法`loaded_graph`获取tensors。Tensors中的名字如下：  
+使用函数[`get_tensor_by_name()`](https://www.tensorflow.org/api_docs/python/tf/Graph#get_tensor_by_name)中的方法`loaded_graph`获取tensors。Tensors中的名字如下：
 - "input:0"
 - "initial_state:0"
 - "final_state:0"
 - "probs:0"
-Return：a tuple `(InputTensor, InitialStateTensor, FinalStateTensor, ProbsTensor)` 
+Return：a tuple `(InputTensor, InitialStateTensor, FinalStateTensor, ProbsTensor)`
 """
 
 
@@ -372,10 +375,11 @@ def get_tensors(loaded_graph):
     """
     # todo 需要编程：
     input_tensor = loaded_graph.get_tensor_by_name('input:0')
+    keep_prob = loaded_graph.get_tensor_by_name('keep_prob:0')
     initial_state_tensor = loaded_graph.get_tensor_by_name("initial_state:0")
     final_state_tensor = loaded_graph.get_tensor_by_name("final_state:0")
     probs_tensor = loaded_graph.get_tensor_by_name("probs:0")
-    return input_tensor, initial_state_tensor, final_state_tensor, probs_tensor
+    return input_tensor, initial_state_tensor, final_state_tensor, probs_tensor, keep_prob
 
 
 # Choose Word
@@ -394,9 +398,9 @@ def pick_word(probabilities, int_to_vocab):
 
 # todo 使用训练模型生成电视剧本
 def test():
-    gen_length = 400
+    gen_length = 200
     # homer_simpson, moe_szyslak, or Barney_Gumble
-    prime_word = 'moe_szyslak'
+    prime_word = 'homer_simpson'
     # print(vocab_to_int)
     # print(vocab_to_int[prime_word])
 
@@ -407,7 +411,7 @@ def test():
         loader.restore(sess, load_dir)
 
         # 从载入的模型获取 tensors
-        input_text, initial_state, final_state, probs = get_tensors(loaded_graph)
+        input_text, initial_state, final_state, probs, keep_prob = get_tensors(loaded_graph)
 
         # 句子生成设置
         gen_sentences = [prime_word + ':']
@@ -423,7 +427,7 @@ def test():
             # 获取预测值
             probabilities, prev_state = sess.run(
                 [probs, final_state],
-                {input_text: dyn_input, initial_state: prev_state})
+                {input_text: dyn_input, initial_state: prev_state, keep_prob: 1.0})
 
             pred_word = pick_word(probabilities[0][dyn_seq_length - 1], int_to_vocab)
 
@@ -441,5 +445,6 @@ def test():
 
 
 if __name__ == '__main__':
-    training()
-    # test()
+    # preprocess_and_save_data()
+    # training()
+    test()
