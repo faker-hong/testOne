@@ -33,6 +33,8 @@ exection -> execution (插入 'u')
 '''
 
 
+# 从两个字符串的最后一位开始匹配，如果相同都前进一步，如果不同，有增删改三种操作
+# 这里是用DP table来解决重叠子问题
 def minDistance(word1, word2):
     n1 = len(word1)
     n2 = len(word2)
@@ -58,9 +60,38 @@ def minDistance(word1, word2):
     return dp[-1][-1]
 
 
+# 这里用递归方法来解决， 用备忘录来解决重叠子问题
+def minDistance_(word1, word2):
+    # 备忘录
+    memo = dict()
+
+    def dp(i, j):
+        if (i, j) in memo:
+            return memo[(i, j)]
+
+        # 如果i, j为0， 那剩下的编辑距离就为另一个字符串剩下的加上去
+        if i == -1: return j + 1
+        if j == -1: return i + 1
+
+        if word1[i] == word2[j]:
+            memo[(i, j)] = dp(i-1, j-1)     # 两个字符相同，什么也不用做
+        else:
+            memo[(i, j)] = min(
+                dp(i - 1, j) + 1,         # 删除
+                dp(i, j - 1) + 1,         # 增加
+                dp(i - 1, j - 1) + 1      # 替换
+            )
+
+        return memo[(i, j)]
+
+    return dp(len(word1) - 1, len(word2) - 1)
+
+
 if __name__ == '__main__':
     word1 = "intention"
     word2 = "execution"
 
     res = minDistance(word1, word2)
+    res_ = minDistance_(word1, word2)
     print(res)
+    print(res_)
