@@ -20,9 +20,13 @@ def maxCoins(nums):
     n = len(nums)
     dp = [[0] * n for _ in range(n)]
 
-    for k in range(2, n):
+    # 这里k理解为left和right的距离
+    for k in range(1, n):
         for left in range(0, n - k):
             right = left + k
+            # 最后戳破气球的取值在，left+1和right-1之间
             for i in range(left + 1, right):
                 dp[left][right] = max(dp[left][right], nums[left] * nums[i] * nums[right] + dp[left][i] + dp[i][right])
     return dp[0][n - 1]
+
+print(maxCoins([3,1,5,8]))
