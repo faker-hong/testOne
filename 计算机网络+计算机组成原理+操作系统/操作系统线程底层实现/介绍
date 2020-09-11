@@ -1,0 +1,21 @@
+任务类
+task.py
+        Task()
+
+线程任务类
+queue.py
+        ThreadSafeQueue()
+        ThreadSafeQueueException()
+
+任务处理线程
+pool.py
+        ProcessThread()     任务处理线程
+        ThreadPool()        任务处理线程池
+
+测试用例
+test.py
+
+
+1.通过task.py中的Task生成不同逻辑的任务
+2.通过queue.py创建线程池队列和任务队列
+3.把任务加入到任务队列中
