@@ -31,6 +31,7 @@ class ThreadSafeQueue:
         self.lock.acquire()
         self.queue.append(item)
         self.lock.release()
+        # 通知其他可能处在等待状态的线程
         self.condition.acquire()
         self.condition.notify()
         self.condition.release()

@@ -1,21 +1,33 @@
-任务类
-task.py
-        Task()
+    1.线程安全队列queue：
+        __init__: 初始化队列大小
+          size(): 获取当前队列的元素
+           put(): 往队列中添加元素
+           pop(): 队列中弹出元素:  队列中是否有元素，没有的话是否需要堵塞线程
+         index(): 根据索引值获取元素
 
-线程任务类
-queue.py
-        ThreadSafeQueue()
-        ThreadSafeQueueException()
+    2.任务类Task
+        Task():
+            __init__(func, *args, **kwargs):
+                func为任务的逻辑，后面为参数
+        异步任务类：
+            AsyncTask():
+                __init__(func, *args, **kwargs): 与父类Task构造方法一样，就多一个result属性值
 
-任务处理线程
-pool.py
-        ProcessThread()     任务处理线程
-        ThreadPool()        任务处理线程池
+                set_result(): 利用condition, 设置result值
+                get_result(): 利用condition, 返回result值，如果还未设置好result，线程堵塞
 
-测试用例
-test.py
+    3.线程类
+        ProcessThread(): 任务处理线程类
+            __init__(task_queue, *args, **kwargs): 继承Thread类，通过event()增加dismiss_flag属性来判断是否暂停线程
+
+            run(): 重写run方法。线程是否被叫停，是否是AsyncTask，是的话需要设置result值
+            dismisss(): 设置dismiss_flag
+            drop(): 通过dismiss()来从逻辑上叫停线程
 
 
-1.通过task.py中的Task生成不同逻辑的任务
-2.通过queue.py创建线程池队列和任务队列
-3.把任务加入到任务队列中
+        ThreadPool(): 任务处理线程池
+            __init__(size): 设置线程池队列和任务队列，然后把new ProcessThread()把线程put到线程池队列
+
+            start(): 启动线程池
+            join(): 叫停线程池，这里叫停除了从逻辑上叫停，还需要从线程的角度上叫停。调用stop()和join()
+            put(): 这里put是往任务队列中put任务
