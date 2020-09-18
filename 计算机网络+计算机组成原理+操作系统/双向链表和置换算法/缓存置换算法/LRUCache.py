@@ -11,7 +11,7 @@ class LRUCache:
         if key in self.map:
             node = self.map[key]
             self.list.remove(node)
-            self.list.append(node)
+            self.list.append_front(node)
             return node.value
         else:
             return -1
