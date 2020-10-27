@@ -74,7 +74,7 @@ hash索引：
 	优化器的两个阶段：
 		逻辑查询优化：改变sql语句内容使得sql更高效，，为物理查询优化提供多种方案
 		物理查询优化：关系代数每一步对应物理计算，有多种算法，选择代价最小的一种
-	1.用explain查看对应sql语句的执行计划：执行顺序，id越大越先执行，id相同从下往下
+	1.用explain查看对应sql语句的执行计划：执行顺序，id越大越先执行，id相同从上往下
 	2.show profile查看sql每个步骤的时间
 		show profile查看sql_ID,然后选择id查看具体信息，show profile for query ID
 
